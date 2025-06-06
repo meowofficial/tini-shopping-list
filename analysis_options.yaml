@@ -20,10 +20,13 @@ linter:
     omit_local_variable_types: true
     parameter_assignments: true
     prefer_asserts_in_initializer_lists: true
+    prefer_const_constructors: true
+    prefer_const_declarations: true
     prefer_final_in_for_each: true
     prefer_final_locals: true
     prefer_if_elements_to_conditional_expressions: true
     prefer_null_aware_method_calls: true
+    prefer_relative_imports: true
     prefer_single_quotes: true
     test_types_in_equals: true
     tighten_type_of_initializing_formals: true
@@ -37,7 +40,7 @@ linter:
     use_late_for_private_fields_and_variables: true
     use_named_constants: true
     use_raw_strings: true
-    use_setters_to_change_properties: true
+    use_setters_to_change_properties: false
     use_string_buffers: true
     use_super_parameters: true
     use_to_and_as_if_applicable: true
@@ -47,3 +50,7 @@ analyzer:
     invalid_use_of_protected_member: error
   exclude:
     - lib/**.g.dart
+
+formatter:
+  page_width: 100
+  trailing_commas: preserve

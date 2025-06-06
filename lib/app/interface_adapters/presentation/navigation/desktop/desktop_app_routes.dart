@@ -1,0 +1,28 @@
+import 'package:equatable/equatable.dart';
+
+import '../../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
+
+class DesktopShoppingListOverviewRoute extends Equatable implements AppRoute {
+  const DesktopShoppingListOverviewRoute({
+    required this.id,
+  });
+
+  @override
+  final String id;
+
+  @override
+  List<Object?> get props {
+    return [
+      id,
+    ];
+  }
+
+  @override
+  DesktopShoppingListOverviewRoute copyWith({
+    String Function()? id,
+  }) {
+    return DesktopShoppingListOverviewRoute(
+      id: id == null ? this.id : id(),
+    );
+  }
+}
