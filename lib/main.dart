@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'app/frameworks/ui/navigation/desktop/desktop_router_delegate.dart';
 import 'app/frameworks/ui/navigation/shared/route_information_parser.dart';
+import 'app/interface_adapters/presentation/app/desktop_app_presenter.dart';
 import 'app/interface_adapters/presentation/navigation/desktop/desktop_navigator_presenter.dart';
 import 'app/interface_adapters/presentation/navigation/shared/uri_config_parser_locator.dart';
 import 'injection_container.dart';
@@ -31,12 +32,18 @@ class _AppWidgetState extends State<AppWidget> {
   void initState() {
     super.initState();
 
+    AppPresenterImpl(
+      initializeStores: di(),
+      handleAppLaunch: di(),
+      readAppInitializationFlowState: di(),
+    );
+
     _desktopNavigatorPresenter = DesktopNavigatorPresenterImpl(
       desktopNavigator: di(),
-      activateUserIntent: di(),
-      readActiveUserIntent: di(),
-      watchActiveUserIntent: di(),
-      handleAppLaunch: di(),
+      desktopNavigatorUriConfigParserLocator: di(),
+      readShoppingListItemAdditionFlowState: di(),
+      startShoppingListItemAddition: di(),
+      watchAppInitializationFlowState: di(),
       readAppInitializationFlowState: di(),
       uuidGenerator: di(),
     );

@@ -5,8 +5,8 @@ import '../../../core/application/stores/base_store.dart';
 import '../../../core/common/stream/state_streamable.dart';
 import '../flow_states/app_initialization_flow_state.dart';
 
-abstract interface class AppInitializationStore
-    implements StateStreamable<AppInitializationStoreState> {
+abstract interface class AppInitializationFlowStore
+    implements StateStreamable<AppInitializationFlowStoreState> {
   bool get initialized;
 
   void initialize({
@@ -20,16 +20,16 @@ abstract interface class AppInitializationStore
   void dispose();
 }
 
-@LazySingleton(as: AppInitializationStore)
-class AppInitializationStoreImpl extends BaseStore<AppInitializationStoreState>
-    implements AppInitializationStore {
-  AppInitializationStoreImpl();
+@LazySingleton(as: AppInitializationFlowStore)
+class AppInitializationFlowStoreImpl extends BaseStore<AppInitializationFlowStoreState>
+    implements AppInitializationFlowStore {
+  AppInitializationFlowStoreImpl();
 
   @override
   void initialize({
     required AppInitializationFlowState appInitializationFlowState,
   }) {
-    final initialState = AppInitializationStoreState(
+    final initialState = AppInitializationFlowStoreState(
       appInitializationFlowState: appInitializationFlowState,
     );
 
@@ -48,8 +48,8 @@ class AppInitializationStoreImpl extends BaseStore<AppInitializationStoreState>
   }
 }
 
-class AppInitializationStoreState extends Equatable {
-  const AppInitializationStoreState({
+class AppInitializationFlowStoreState extends Equatable {
+  const AppInitializationFlowStoreState({
     required this.appInitializationFlowState,
   });
 
@@ -62,10 +62,10 @@ class AppInitializationStoreState extends Equatable {
     ];
   }
 
-  AppInitializationStoreState copyWith({
+  AppInitializationFlowStoreState copyWith({
     AppInitializationFlowState Function()? appInitializationFlowState,
   }) {
-    return AppInitializationStoreState(
+    return AppInitializationFlowStoreState(
       appInitializationFlowState: appInitializationFlowState == null
           ? this.appInitializationFlowState
           : appInitializationFlowState(),
