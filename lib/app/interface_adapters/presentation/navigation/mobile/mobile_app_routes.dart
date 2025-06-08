@@ -2,6 +2,31 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
 
+class MobileHomeRoute extends Equatable implements AppRoute {
+  const MobileHomeRoute({
+    required this.id,
+  });
+
+  @override
+  final String id;
+
+  @override
+  List<Object?> get props {
+    return [
+      id,
+    ];
+  }
+
+  @override
+  MobileHomeRoute copyWith({
+    String Function()? id,
+  }) {
+    return MobileHomeRoute(
+      id: id == null ? this.id : id(),
+    );
+  }
+}
+
 class MobileShoppingListOverviewRoute extends Equatable implements AppRoute {
   const MobileShoppingListOverviewRoute({
     required this.id,

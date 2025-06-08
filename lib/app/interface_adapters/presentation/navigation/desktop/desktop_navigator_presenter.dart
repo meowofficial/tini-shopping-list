@@ -94,7 +94,7 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
   }
 
   void _initializeNavigatorState() {
-    final routes = IList([
+    final routes = IList<AppRoute>([
       SplashRoute(
         id: _uuidGenerator.generateUuid(),
       ),

@@ -155,6 +155,9 @@ class ShoppingListItemAdditionUriConfigParser
       DesktopShoppingListOverviewRoute(
         id: _uuidGenerator.generateUuid(),
       ),
+      DesktopShoppingListItemAdditionRoute(
+        id: _uuidGenerator.generateUuid(),
+      ),
     ]);
   }
 }

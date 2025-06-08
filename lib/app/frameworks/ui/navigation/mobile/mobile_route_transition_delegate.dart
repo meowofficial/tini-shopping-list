@@ -47,7 +47,8 @@ class MobileRouteTransitionDelegate extends TransitionDelegate<dynamic> {
         final routeTransitionRecord = routeToNewTransitionRecord[route]!;
 
         if (routeTransitionRecord.isWaitingForEnteringDecision) {
-          final shouldBeMarkedForAdd = routeTransition is MobileAdditionRouteTransition &&
+          final shouldBeMarkedForAdd =
+              routeTransition is MobileAdditionRouteTransition &&
               !routeTransition.displayTransition;
 
           if (!locationToExitingPageRoute.containsKey(routeTransitionRecord) &&
@@ -64,18 +65,21 @@ class MobileRouteTransitionDelegate extends TransitionDelegate<dynamic> {
         final exitingRouteTransitionRecord = routeToExitingRouteTransitionRecord[route]!;
 
         if (exitingRouteTransitionRecord.isWaitingForExitingDecision) {
-          final hasPagelessRouteTransitionRecord =
-              pageRouteToPagelessRoutes.containsKey(exitingRouteTransitionRecord);
+          final hasPagelessRouteTransitionRecord = pageRouteToPagelessRoutes.containsKey(
+            exitingRouteTransitionRecord,
+          );
 
           final shouldBeMarkedForComplete =
               routeTransition is MobileRemovalRouteTransition && !routeTransition.displayTransition;
 
           if (isLast && !hasPagelessRouteTransitionRecord && !shouldBeMarkedForComplete) {
-            exitingRouteTransitionRecord
-                .markForPop(exitingRouteTransitionRecord.route.currentResult);
+            exitingRouteTransitionRecord.markForPop(
+              exitingRouteTransitionRecord.route.currentResult,
+            );
           } else {
-            exitingRouteTransitionRecord
-                .markForComplete(exitingRouteTransitionRecord.route.currentResult);
+            exitingRouteTransitionRecord.markForComplete(
+              exitingRouteTransitionRecord.route.currentResult,
+            );
           }
 
           if (hasPagelessRouteTransitionRecord) {
@@ -87,11 +91,13 @@ class MobileRouteTransitionDelegate extends TransitionDelegate<dynamic> {
                 if (isLast &&
                     pagelessRouteTransitionRecord == pagelessRouteTransitionRecords.last &&
                     !shouldBeMarkedForComplete) {
-                  pagelessRouteTransitionRecord
-                      .markForPop(pagelessRouteTransitionRecord.route.currentResult);
+                  pagelessRouteTransitionRecord.markForPop(
+                    pagelessRouteTransitionRecord.route.currentResult,
+                  );
                 } else {
-                  pagelessRouteTransitionRecord
-                      .markForComplete(pagelessRouteTransitionRecord.route.currentResult);
+                  pagelessRouteTransitionRecord.markForComplete(
+                    pagelessRouteTransitionRecord.route.currentResult,
+                  );
                 }
               }
             }
@@ -110,8 +116,9 @@ class MobileRouteTransitionDelegate extends TransitionDelegate<dynamic> {
 
     while (exitingRouteTransitionRecord != null) {
       if (exitingRouteTransitionRecord.isWaitingForExitingDecision) {
-        exitingRouteTransitionRecord
-            .markForComplete(exitingRouteTransitionRecord.route.currentResult);
+        exitingRouteTransitionRecord.markForComplete(
+          exitingRouteTransitionRecord.route.currentResult,
+        );
 
         final pagelessRouteTransitionRecords =
             pageRouteToPagelessRoutes[exitingRouteTransitionRecord];
@@ -119,8 +126,9 @@ class MobileRouteTransitionDelegate extends TransitionDelegate<dynamic> {
         if (pagelessRouteTransitionRecords != null) {
           for (final pagelessRouteTransitionRecord in pagelessRouteTransitionRecords) {
             if (pagelessRouteTransitionRecord.isWaitingForExitingDecision) {
-              pagelessRouteTransitionRecord
-                  .markForComplete(pagelessRouteTransitionRecord.route.currentResult);
+              pagelessRouteTransitionRecord.markForComplete(
+                pagelessRouteTransitionRecord.route.currentResult,
+              );
             }
           }
         }

@@ -7,8 +7,8 @@ class NewShoppingListDraftItem extends BaseEntity<NewShoppingListDraftItemSnapsh
   NewShoppingListDraftItem({
     required String title,
     required ShoppingListItemTitleValidationError? titleValidationError,
-  })  : _title = title,
-        _titleValidationError = titleValidationError;
+  }) : _title = title,
+       _titleValidationError = titleValidationError;
 
   String _title;
   ShoppingListItemTitleValidationError? _titleValidationError;

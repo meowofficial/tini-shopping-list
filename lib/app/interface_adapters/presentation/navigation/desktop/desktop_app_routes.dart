@@ -26,3 +26,28 @@ class DesktopShoppingListOverviewRoute extends Equatable implements AppRoute {
     );
   }
 }
+
+class DesktopShoppingListItemAdditionRoute extends Equatable implements AppRoute {
+  const DesktopShoppingListItemAdditionRoute({
+    required this.id,
+  });
+
+  @override
+  final String id;
+
+  @override
+  List<Object?> get props {
+    return [
+      id,
+    ];
+  }
+
+  @override
+  DesktopShoppingListItemAdditionRoute copyWith({
+    String Function()? id,
+  }) {
+    return DesktopShoppingListItemAdditionRoute(
+      id: id == null ? this.id : id(),
+    );
+  }
+}

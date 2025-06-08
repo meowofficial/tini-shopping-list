@@ -15,4 +15,3 @@ class ShoppingListItemAdditionUriConfig extends Equatable implements UriConfig {
   @override
   List<Object?> get props => [];
 }
-

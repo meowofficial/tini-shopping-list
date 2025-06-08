@@ -7,20 +7,21 @@ import '../../../../../core/common/stream/with_previous_stream.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/mobile/mobile_route_transition.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/shared/base_navigator.dart';
+import '../../../../../features/home/interface_adapters/presentation/mobile_home_tab.dart';
 
 abstract interface class MobileNavigator implements StateStreamable<MobileNavigatorState> {
   Stream<(MobileNavigatorState, MobileNavigatorState)> get stateStreamWithPrevious;
 
   void initialize({
     required MobileNavigatorStackState rootStackState,
-    required MobileNavigatorStackState overviewTabStackState,
-    required MobileNavigatorStackState additionTabStackState,
+    required IMap<MobileHomeTab, MobileNavigatorStackState> homeTabStackStateMap,
+    required MobileHomeTab? activeHomeTab,
   });
 
   void updateWith({
     MobileNavigatorStackState Function()? rootStackState,
-    MobileNavigatorStackState Function()? overviewTabStackState,
-    MobileNavigatorStackState Function()? additionTabStackState,
+    IMap<MobileHomeTab, MobileNavigatorStackState> Function()? homeTabStackStateMap,
+    MobileHomeTab? Function()? activeHomeTab,
   });
 
   void dispose();
@@ -36,13 +37,13 @@ class MobileNavigatorImpl extends BaseNavigator<MobileNavigatorState> implements
   @override
   void initialize({
     required MobileNavigatorStackState rootStackState,
-    required MobileNavigatorStackState overviewTabStackState,
-    required MobileNavigatorStackState additionTabStackState,
+    required IMap<MobileHomeTab, MobileNavigatorStackState> homeTabStackStateMap,
+    required MobileHomeTab? activeHomeTab,
   }) {
     final updatedState = MobileNavigatorState(
       rootStackState: rootStackState,
-      overviewTabStackState: overviewTabStackState,
-      additionTabStackState: additionTabStackState,
+      homeTabStackStateMap: homeTabStackStateMap,
+      activeHomeTab: activeHomeTab,
     );
 
     initializeState(updatedState);
@@ -53,13 +54,13 @@ class MobileNavigatorImpl extends BaseNavigator<MobileNavigatorState> implements
   @override
   void updateWith({
     MobileNavigatorStackState Function()? rootStackState,
-    MobileNavigatorStackState Function()? overviewTabStackState,
-    MobileNavigatorStackState Function()? additionTabStackState,
+    IMap<MobileHomeTab, MobileNavigatorStackState> Function()? homeTabStackStateMap,
+    MobileHomeTab? Function()? activeHomeTab,
   }) {
     final updatedState = state.copyWith(
       rootStackState: rootStackState,
-      overviewTabStackState: overviewTabStackState,
-      additionTabStackState: additionTabStackState,
+      homeTabStackStateMap: homeTabStackStateMap,
+      activeHomeTab: activeHomeTab,
     );
 
     emit(updatedState);
@@ -97,34 +98,34 @@ class MobileNavigatorStackState extends Equatable {
 class MobileNavigatorState extends Equatable {
   const MobileNavigatorState({
     required this.rootStackState,
-    required this.overviewTabStackState,
-    required this.additionTabStackState,
+    required this.homeTabStackStateMap,
+    required this.activeHomeTab,
   });
 
   final MobileNavigatorStackState rootStackState;
-  final MobileNavigatorStackState overviewTabStackState;
-  final MobileNavigatorStackState additionTabStackState;
+  final IMap<MobileHomeTab, MobileNavigatorStackState> homeTabStackStateMap;
+  final MobileHomeTab? activeHomeTab;
 
   @override
   List<Object?> get props {
     return [
       rootStackState,
-      overviewTabStackState,
-      additionTabStackState,
+      homeTabStackStateMap,
+      activeHomeTab,
     ];
   }
 
   MobileNavigatorState copyWith({
     MobileNavigatorStackState Function()? rootStackState,
-    MobileNavigatorStackState Function()? overviewTabStackState,
-    MobileNavigatorStackState Function()? additionTabStackState,
+    IMap<MobileHomeTab, MobileNavigatorStackState> Function()? homeTabStackStateMap,
+    MobileHomeTab? Function()? activeHomeTab,
   }) {
     return MobileNavigatorState(
       rootStackState: rootStackState == null ? this.rootStackState : rootStackState(),
-      overviewTabStackState:
-          overviewTabStackState == null ? this.overviewTabStackState : overviewTabStackState(),
-      additionTabStackState:
-          additionTabStackState == null ? this.additionTabStackState : additionTabStackState(),
+      homeTabStackStateMap: homeTabStackStateMap == null
+          ? this.homeTabStackStateMap
+          : homeTabStackStateMap(),
+      activeHomeTab: activeHomeTab == null ? this.activeHomeTab : activeHomeTab(),
     );
   }
 }

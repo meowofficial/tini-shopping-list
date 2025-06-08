@@ -8,9 +8,9 @@ class ShoppingListItem extends BaseEntity<ShoppingListItemSnapshot> {
     required String id,
     required String title,
     required bool checked,
-  })  : _id = id,
-        _title = title,
-        _checked = checked;
+  }) : _id = id,
+       _title = title,
+       _checked = checked;
 
   final String _id;
   String _title;

@@ -8,9 +8,9 @@ class ExistingShoppingListDraftItem extends BaseEntity<ExistingShoppingListDraft
     required String id,
     required String title,
     required ShoppingListItemTitleValidationError? titleValidationError,
-  })  : _id = id,
-        _title = title,
-        _titleValidationError = titleValidationError;
+  }) : _id = id,
+       _title = title,
+       _titleValidationError = titleValidationError;
 
   final String _id;
   String _title;
