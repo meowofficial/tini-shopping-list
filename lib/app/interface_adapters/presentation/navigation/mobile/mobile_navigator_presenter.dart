@@ -13,6 +13,7 @@ import '../../../../application/refs/flow_state_refs/app_initialization_flow_sta
 import '../../../../application/use_cases/read_app_initialization_flow_state.dart';
 import '../../../../application/use_cases/watch_app_initialization_flow_state.dart';
 import '../shared/app_routes.dart';
+import '../shared/uri_config_holder.dart';
 import '../shared/uri_configs.dart';
 import 'mobile_navigator.dart';
 import 'mobile_navigator_uri_config_parser_locator.dart';
@@ -46,6 +47,7 @@ class MobileNavigatorPresenterImpl implements MobileNavigatorPresenter {
   MobileNavigatorPresenterImpl({
     required MobileNavigator mobileNavigator,
     required MobileNavigatorUriConfigParserLocator mobileNavigatorUriConfigParserLocator,
+    required UriConfigHolder uriConfigHolder,
     required UuidGenerator uuidGenerator,
     required ReadAppInitializationFlowState readAppInitializationFlowState,
     required ReadShoppingListItemAdditionFlowState readShoppingListItemAdditionFlowState,
@@ -53,35 +55,28 @@ class MobileNavigatorPresenterImpl implements MobileNavigatorPresenter {
     required WatchAppInitializationFlowState watchAppInitializationFlowState,
   }) : _mobileNavigator = mobileNavigator,
        _mobileNavigatorUriConfigParserLocator = mobileNavigatorUriConfigParserLocator,
+       _uriConfigHolder = uriConfigHolder,
        _uuidGenerator = uuidGenerator,
        _readAppInitializationFlowState = readAppInitializationFlowState,
        _readShoppingListItemAdditionFlowState = readShoppingListItemAdditionFlowState,
        _startShoppingListItemAddition = startShoppingListItemAddition,
        _watchAppInitializationFlowState = watchAppInitializationFlowState {
-    final appInitializationFlowState = _readAppInitializationFlowState();
+    final appInitializationFlowStateRef = _readAppInitializationFlowState();
 
-    switch (appInitializationFlowState) {
-      case InitialAppInitializationFlowStateRef():
-      case LoadingAppInitializationFlowStateRef():
-        _initializeNavigatorState();
-
-      case LoadedAppInitializationFlowStateRef():
-        if (_currentUriConfig != null) {
-          _syncNavigatorState();
-        }
-    }
+    _syncNavigatorState(
+      appInitializationFlowStateRef: appInitializationFlowStateRef,
+    );
   }
 
   final MobileNavigator _mobileNavigator;
   final MobileNavigatorUriConfigParserLocator _mobileNavigatorUriConfigParserLocator;
+  final UriConfigHolder _uriConfigHolder;
   final UuidGenerator _uuidGenerator;
 
   final ReadAppInitializationFlowState _readAppInitializationFlowState;
   final ReadShoppingListItemAdditionFlowState _readShoppingListItemAdditionFlowState;
   final StartShoppingListItemAddition _startShoppingListItemAddition;
   final WatchAppInitializationFlowState _watchAppInitializationFlowState;
-
-  UriConfig? _currentUriConfig;
 
   @override
   MobileNavigatorState get state => _mobileNavigator.state;
@@ -107,38 +102,14 @@ class MobileNavigatorPresenterImpl implements MobileNavigatorPresenter {
     }).toIList();
   }
 
-  void _initializeNavigatorState() {
-    final rootRoutes = IList<AppRoute>([
-      SplashRoute(
-        id: _uuidGenerator.generateUuid(),
-      ),
-    ]);
-
-    const rootRouteToTransition = IMapConst<AppRoute, MobileRouteTransition>({});
-
-    final rootStackState = MobileNavigatorStackState(
-      routes: rootRoutes,
-      routeToTransition: rootRouteToTransition,
-    );
-
+  MobileNavigatorStackState _createEmptyStackState() {
     const emptyRoutes = IListConst<AppRoute>([]);
 
     const emptyRouteToTransition = IMapConst<AppRoute, MobileRouteTransition>({});
 
-    const emptyStackState = MobileNavigatorStackState(
+    return const MobileNavigatorStackState(
       routes: emptyRoutes,
       routeToTransition: emptyRouteToTransition,
-    );
-
-    const homeTabStackStateMap = IMapConst<MobileHomeTab, MobileNavigatorStackState>({
-      MobileHomeTab.overview: emptyStackState,
-      MobileHomeTab.addition: emptyStackState,
-    });
-
-    _mobileNavigator.initialize(
-      rootStackState: rootStackState,
-      homeTabStackStateMap: homeTabStackStateMap,
-      activeHomeTab: null,
     );
   }
 
@@ -196,11 +167,53 @@ class MobileNavigatorPresenterImpl implements MobileNavigatorPresenter {
     );
   }
 
-  void _syncNavigatorState() {
-    final parser = _mobileNavigatorUriConfigParserLocator.getParserByUriConfig(_currentUriConfig!);
+  void _syncNavigatorState({
+    required AppInitializationFlowStateRef appInitializationFlowStateRef,
+  }) {
+    final uriConfig = _uriConfigHolder.lastKnownUriConfig;
+
+    final shouldInitWithSplashScreen = switch (appInitializationFlowStateRef) {
+      InitialAppInitializationFlowStateRef() ||
+      LoadingAppInitializationFlowStateRef() => !_mobileNavigator.initialized,
+      LoadedAppInitializationFlowStateRef() => !_mobileNavigator.initialized && uriConfig == null,
+    };
+
+    if (shouldInitWithSplashScreen) {
+      final rootRoutes = IList<AppRoute>([
+        SplashRoute(
+          id: _uuidGenerator.generateUuid(),
+        ),
+      ]);
+
+      const rootRouteToTransition = IMapConst<AppRoute, MobileRouteTransition>({});
+
+      final rootStackState = MobileNavigatorStackState(
+        routes: rootRoutes,
+        routeToTransition: rootRouteToTransition,
+      );
+
+      final homeTabStackStateMap = IMap.fromEntries(
+        MobileHomeTab.values.map((tab) {
+          return MapEntry(tab, _createEmptyStackState());
+        }),
+      );
+
+      _mobileNavigator.initialize(
+        rootStackState: rootStackState,
+        homeTabStackStateMap: homeTabStackStateMap,
+        activeHomeTab: null,
+      );
+
+      return;
+    }
+
+    final parser = _mobileNavigatorUriConfigParserLocator.getParserByUriConfig(uriConfig!);
 
     final requiredRootRoutes = parser.getRequiredRootRoutes();
-    final existingRootStackState = _mobileNavigator.state.rootStackState;
+
+    final navigatorState = _mobileNavigator.initialized ? _mobileNavigator.state : null;
+
+    final existingRootStackState = navigatorState?.rootStackState ?? _createEmptyStackState();
 
     final (
       routes: updatedRootRoutes,
@@ -213,7 +226,9 @@ class MobileNavigatorPresenterImpl implements MobileNavigatorPresenter {
 
     final homeTab = parser.getHomeTab();
     final requiredHomeTabRoutes = parser.getRequiredHomeTabRoutes();
-    final existingHomeTabStackState = _mobileNavigator.state.homeTabStackStateMap[homeTab]!;
+
+    final existingHomeTabStackState =
+        navigatorState?.homeTabStackStateMap[homeTab] ?? _createEmptyStackState();
 
     final (
       routes: updatedHomeTabRoutes,
@@ -234,16 +249,34 @@ class MobileNavigatorPresenterImpl implements MobileNavigatorPresenter {
       routeToTransition: () => updatedHomeTabRouteToTransition,
     );
 
-    final updatedHomeTabStackStateMap = _mobileNavigator.state.homeTabStackStateMap.add(
-      homeTab,
-      updatedHomeTabStackState,
-    );
+    if (_mobileNavigator.initialized) {
+      final updatedHomeTabStackStateMap = _mobileNavigator.state.homeTabStackStateMap.add(
+        homeTab,
+        updatedHomeTabStackState,
+      );
 
-    _mobileNavigator.updateWith(
-      rootStackState: () => updatedRootStackState,
-      homeTabStackStateMap: () => updatedHomeTabStackStateMap,
-      activeHomeTab: () => homeTab,
-    );
+      _mobileNavigator.updateWith(
+        rootStackState: () => updatedRootStackState,
+        homeTabStackStateMap: () => updatedHomeTabStackStateMap,
+        activeHomeTab: () => homeTab,
+      );
+    } else {
+      final homeTabStackStateMap = IMap.fromEntries(
+        MobileHomeTab.values.map((it) {
+          if (it == homeTab) {
+            return MapEntry(it, updatedHomeTabStackState);
+          }
+
+          return MapEntry(it, _createEmptyStackState());
+        }),
+      );
+
+      _mobileNavigator.initialize(
+        rootStackState: updatedRootStackState,
+        homeTabStackStateMap: homeTabStackStateMap,
+        activeHomeTab: homeTab,
+      );
+    }
   }
 
   @override
@@ -428,24 +461,28 @@ class MobileNavigatorPresenterImpl implements MobileNavigatorPresenter {
       }
     }
 
-    _currentUriConfig = bestMatchResult?.uriConfig;
+    _uriConfigHolder.lastKnownUriConfig = bestMatchResult?.uriConfig;
 
-    return _currentUriConfig;
+    return _uriConfigHolder.lastKnownUriConfig;
   }
 
   @override
   void onPlatformUriConfigChanged(UriConfig uriConfig) async {
-    _currentUriConfig = uriConfig;
+    if (_uriConfigHolder.lastKnownUriConfig == uriConfig) {
+      return;
+    }
 
-    final appInitializationFlowState = _readAppInitializationFlowState();
+    _uriConfigHolder.lastKnownUriConfig = uriConfig;
 
-    if (appInitializationFlowState is! LoadedAppInitializationFlowStateRef) {
+    final appInitializationFlowStateRef = _readAppInitializationFlowState();
+
+    if (appInitializationFlowStateRef is! LoadedAppInitializationFlowStateRef) {
       await _watchAppInitializationFlowState().firstWhere((appInitializationFlowStateRef) {
         return appInitializationFlowStateRef is LoadedAppInitializationFlowStateRef;
       });
     }
 
-    if (_currentUriConfig != uriConfig) {
+    if (_uriConfigHolder.lastKnownUriConfig != uriConfig) {
       return;
     }
 
@@ -457,6 +494,8 @@ class MobileNavigatorPresenterImpl implements MobileNavigatorPresenter {
         _startShoppingListItemAddition();
     }
 
-    _syncNavigatorState();
+    _syncNavigatorState(
+      appInitializationFlowStateRef: appInitializationFlowStateRef,
+    );
   }
 }

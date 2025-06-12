@@ -10,6 +10,8 @@ import '../../../../../core/interface_adapters/presentation/navigation/shared/ba
 import '../../../../../features/home/interface_adapters/presentation/mobile_home_tab.dart';
 
 abstract interface class MobileNavigator implements StateStreamable<MobileNavigatorState> {
+  bool get initialized;
+
   Stream<(MobileNavigatorState, MobileNavigatorState)> get stateStreamWithPrevious;
 
   void initialize({

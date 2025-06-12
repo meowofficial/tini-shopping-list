@@ -9,6 +9,8 @@ import '../../../../../core/interface_adapters/presentation/navigation/shared/ap
 import '../../../../../core/interface_adapters/presentation/navigation/shared/base_navigator.dart';
 
 abstract interface class DesktopNavigator implements StateStreamable<DesktopNavigatorState> {
+  bool get initialized;
+
   Stream<(DesktopNavigatorState, DesktopNavigatorState)> get stateStreamWithPrevious;
 
   void initialize({
@@ -45,6 +47,8 @@ class DesktopNavigatorImpl extends BaseNavigator<DesktopNavigatorState>
     initializeState(initialState);
 
     stateStreamWithPrevious = stateStream.withPreviousSeeded(initialState);
+
+    emit(initialState);
   }
 
   @override
@@ -58,6 +62,12 @@ class DesktopNavigatorImpl extends BaseNavigator<DesktopNavigatorState>
     );
 
     emit(updatedState);
+  }
+
+  @override
+  @disposeMethod
+  void dispose() {
+    super.dispose();
   }
 }
 

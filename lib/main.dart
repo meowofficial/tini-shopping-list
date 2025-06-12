@@ -1,12 +1,9 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart' hide RootWidget;
+import 'package:flutter/material.dart' hide RootWidget;
 
-import 'app/frameworks/ui/navigation/desktop/desktop_router_delegate.dart';
-import 'app/frameworks/ui/navigation/shared/route_information_parser.dart';
 import 'app/interface_adapters/presentation/app/desktop_app_presenter.dart';
-import 'app/interface_adapters/presentation/navigation/desktop/desktop_navigator_presenter.dart';
-import 'app/interface_adapters/presentation/navigation/shared/uri_config_parser_locator.dart';
 import 'injection_container.dart';
+import 'root_widget.dart';
 
 void main() {
   configureDependencies();
@@ -23,11 +20,6 @@ class AppWidget extends StatefulWidget {
 }
 
 class _AppWidgetState extends State<AppWidget> {
-  late final DesktopNavigatorPresenter _desktopNavigatorPresenter;
-  late final DesktopRouterDelegate _routerDelegate;
-  late final AppRouteInformationParser _routeInformationParser;
-  late final BackButtonDispatcher _backButtonDispatcher;
-
   @override
   void initState() {
     super.initState();
@@ -36,32 +28,12 @@ class _AppWidgetState extends State<AppWidget> {
       initializeStores: di(),
       handleAppLaunch: di(),
       readAppInitializationFlowState: di(),
-    );
-
-    _desktopNavigatorPresenter = DesktopNavigatorPresenterImpl(
-      desktopNavigator: di(),
-      desktopNavigatorUriConfigParserLocator: di(),
-      readShoppingListItemAdditionFlowState: di(),
-      startShoppingListItemAddition: di(),
-      watchAppInitializationFlowState: di(),
-      readAppInitializationFlowState: di(),
-      uuidGenerator: di(),
-    );
-
-    _routerDelegate = DesktopRouterDelegate(
-      navigatorPresenter: _desktopNavigatorPresenter,
-    );
-
-    _routeInformationParser = AppRouteInformationParser(
-      uriConfigParserLocator: UriConfigParserLocator(),
-    );
-
-    _backButtonDispatcher = RootBackButtonDispatcher();
+    ).initialize();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
         const brightness = Brightness.light;
@@ -105,9 +77,7 @@ class _AppWidgetState extends State<AppWidget> {
           ),
         );
       },
-      routerDelegate: _routerDelegate,
-      routeInformationParser: _routeInformationParser,
-      backButtonDispatcher: _backButtonDispatcher,
+      home: const RootWidget(),
     );
   }
 }

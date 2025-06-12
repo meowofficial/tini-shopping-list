@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_route_transition.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
+import '../../../../../features/shopping_list/frameworks/ui/desktop_shopping_list_overview_screen/screen.dart';
+import '../../../../interface_adapters/presentation/navigation/desktop/desktop_app_routes.dart';
 import '../../../../interface_adapters/presentation/navigation/desktop/desktop_navigator_presenter.dart';
+import '../../../../interface_adapters/presentation/navigation/shared/app_routes.dart';
 import '../../../../interface_adapters/presentation/navigation/shared/uri_configs.dart';
 import '../shared/navigator_observer.dart';
 import '../shared/navigator_page.dart';
@@ -24,20 +27,29 @@ class DesktopRouterDelegate extends RouterDelegate<UriConfig>
   final DesktopNavigatorPresenter _navigatorPresenter;
 
   AppNavigatorPage _createNavigatorPage(AppRoute route) {
-    final Widget page;
+    late final Widget widget;
 
     const fullscreenDialog = false;
 
-    // switch (route) {
-    //   default:
-    //     throw StateError('Unexpected state');
-    // }
+    switch (route) {
+      case SplashRoute():
+        widget = Container(
+          key: Key(route.id),
+          color: Colors.white,
+        );
+
+      case DesktopShoppingListOverviewRoute():
+        widget = DesktopShoppingListOverviewScreen(
+          key: Key(route.id),
+        );
+
+      default:
+        throw StateError('Unexpected state: $route');
+    }
 
     return AppNavigatorPage(
       route: route,
-      child: Container(
-        color: Colors.black,
-      ),
+      child: widget,
       fullscreenDialog: fullscreenDialog,
     );
   }
@@ -45,9 +57,10 @@ class DesktopRouterDelegate extends RouterDelegate<UriConfig>
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
+      initialData: _navigatorPresenter.state,
       stream: _navigatorPresenter.stateStream,
       builder: (context, snapshot) {
-        final state = snapshot.data ?? _navigatorPresenter.state;
+        final state = snapshot.requireData;
 
         final pages = state.routes
             .where((route) {
