@@ -1,13 +1,20 @@
 import 'dart:async';
 
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
+import 'package:injectable/injectable.dart';
 
+import '../../../../../core/common/stream/disposable.dart';
 import '../../../../../core/common/stream/state_streamable.dart';
+import '../../../../../core/common/stream/with_previous_stream.dart';
+import '../../../../../core/common/typedefs/value_with_previous.dart';
 import '../../../../../core/common/uuid/uuid_generator.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_route_transition.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
+import '../../../../../features/shopping_list/application/refs/flow_state_refs/shopping_list_item_addition_flow_state_ref.dart';
+import '../../../../../features/shopping_list/application/use_cases/cancel_shopping_list_item_addition.dart';
 import '../../../../../features/shopping_list/application/use_cases/read_shopping_list_item_addition_flow_state.dart';
 import '../../../../../features/shopping_list/application/use_cases/start_shopping_list_item_addition.dart';
+import '../../../../../features/shopping_list/application/use_cases/watch_shopping_list_item_addition_flow_state.dart';
 import '../../../../application/refs/flow_state_refs/app_initialization_flow_state_ref.dart';
 import '../../../../application/use_cases/read_app_initialization_flow_state.dart';
 import '../../../../application/use_cases/watch_app_initialization_flow_state.dart';
@@ -15,11 +22,13 @@ import '../shared/app_routes.dart';
 import '../shared/uri_config_holder.dart';
 import '../shared/uri_configs.dart';
 import 'desktop_navigator.dart';
+import 'desktop_navigator_delegates/shopping_list_item_addition_flow_navigator_delegates.dart';
+import 'desktop_navigator_observers.dart';
 import 'desktop_navigator_uri_config_parser_locator.dart';
 import 'desktop_navigator_uri_config_parsers.dart';
 
 abstract interface class DesktopNavigatorPresenter
-    implements StateStreamable<DesktopNavigatorState> {
+    implements StateStreamable<DesktopNavigatorState>, Disposable {
   void onRouteAddedToNavigator(AppRoute route);
 
   void onRouteRemovedFromNavigator(AppRoute route);
@@ -29,46 +38,115 @@ abstract interface class DesktopNavigatorPresenter
   UriConfig? getCurrentUserConfig();
 }
 
+@LazySingleton(as: DesktopNavigatorPresenter)
 class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
   DesktopNavigatorPresenterImpl({
-    required DesktopNavigator desktopNavigator,
-    required DesktopNavigatorUriConfigParserLocator desktopNavigatorUriConfigParserLocator,
+    required DesktopNavigator navigator,
+    required DesktopNavigatorUriConfigParserLocator navigatorUriConfigParserLocator,
     required UriConfigHolder uriConfigHolder,
     required UuidGenerator uuidGenerator,
+    required CancelShoppingListItemAddition cancelShoppingListItemAddition,
     required ReadAppInitializationFlowState readAppInitializationFlowState,
     required ReadShoppingListItemAdditionFlowState readShoppingListItemAdditionFlowState,
     required StartShoppingListItemAddition startShoppingListItemAddition,
     required WatchAppInitializationFlowState watchAppInitializationFlowState,
-  }) : _desktopNavigator = desktopNavigator,
-       _desktopNavigatorUriConfigParserLocator = desktopNavigatorUriConfigParserLocator,
+    required WatchShoppingListItemAdditionFlowState watchShoppingListItemAdditionFlowState,
+  }) : _navigator = navigator,
+       _navigatorUriConfigParserLocator = navigatorUriConfigParserLocator,
        _uriConfigHolder = uriConfigHolder,
        _uuidGenerator = uuidGenerator,
+       _cancelShoppingListItemAddition = cancelShoppingListItemAddition,
        _readAppInitializationFlowState = readAppInitializationFlowState,
        _readShoppingListItemAdditionFlowState = readShoppingListItemAdditionFlowState,
        _startShoppingListItemAddition = startShoppingListItemAddition,
-       _watchAppInitializationFlowState = watchAppInitializationFlowState {
+       _watchAppInitializationFlowState = watchAppInitializationFlowState,
+       _watchShoppingListItemAdditionFlowState = watchShoppingListItemAdditionFlowState {
+    _navigatorObservers = IList<DesktopNavigatorObserver>([
+      ShoppingListItemAdditionCancellationNavigatorObserver(
+        cancelShoppingListItemAddition: _cancelShoppingListItemAddition,
+        readShoppingListItemAdditionFlowState: _readShoppingListItemAdditionFlowState,
+      ),
+    ]);
+
+    _shoppingListItemAdditionFlowNavigatorDelegates =
+        IList<ShoppingListItemAdditionFlowNavigatorDelegate>([
+          ShoppingListItemAdditionScreenOpeningNavigatorDelegate(
+            navigator: _navigator,
+            uuidGenerator: _uuidGenerator,
+          ),
+          ShoppingListItemAdditionScreenClosingNavigatorDelegate(
+            navigator: _navigator,
+          ),
+        ]);
+
     final appInitializationFlowStateRef = _readAppInitializationFlowState();
 
     _syncNavigatorState(
       appInitializationFlowStateRef: appInitializationFlowStateRef,
     );
+
+    _shoppingListItemAdditionFlowStateStreamSubscription = _watchShoppingListItemAdditionFlowState()
+        .withPreviousSeeded(_readShoppingListItemAdditionFlowState())
+        .listen(_onShoppingListItemAdditionFlowStateChanged);
+
+    _navigatorStateStreamSubscription = _navigator.stateStreamWithPrevious.listen(
+      _onNavigatorStateChanged,
+    );
   }
 
-  final DesktopNavigator _desktopNavigator;
-  final DesktopNavigatorUriConfigParserLocator _desktopNavigatorUriConfigParserLocator;
+  final DesktopNavigator _navigator;
+  final DesktopNavigatorUriConfigParserLocator _navigatorUriConfigParserLocator;
   final UriConfigHolder _uriConfigHolder;
   final UuidGenerator _uuidGenerator;
 
+  final CancelShoppingListItemAddition _cancelShoppingListItemAddition;
   final ReadAppInitializationFlowState _readAppInitializationFlowState;
   final ReadShoppingListItemAdditionFlowState _readShoppingListItemAdditionFlowState;
   final StartShoppingListItemAddition _startShoppingListItemAddition;
   final WatchAppInitializationFlowState _watchAppInitializationFlowState;
+  final WatchShoppingListItemAdditionFlowState _watchShoppingListItemAdditionFlowState;
+
+  late final IList<DesktopNavigatorObserver> _navigatorObservers;
+  late final IList<ShoppingListItemAdditionFlowNavigatorDelegate>
+  _shoppingListItemAdditionFlowNavigatorDelegates;
+
+  late final StreamSubscription<ValueWithPrevious<ShoppingListItemAdditionFlowStateRef>>
+  _shoppingListItemAdditionFlowStateStreamSubscription;
+
+  late final StreamSubscription<ValueWithPrevious<DesktopNavigatorState>>
+  _navigatorStateStreamSubscription;
 
   @override
-  DesktopNavigatorState get state => _desktopNavigator.state;
+  DesktopNavigatorState get state => _navigator.state;
 
   @override
-  Stream<DesktopNavigatorState> get stateStream => _desktopNavigator.stateStream;
+  Stream<DesktopNavigatorState> get stateStream => _navigator.stateStream;
+
+  void _onShoppingListItemAdditionFlowStateChanged(
+    ValueWithPrevious<ShoppingListItemAdditionFlowStateRef> valueWithPrevious,
+  ) {
+    final (currentStateRef, previousStateRef) = valueWithPrevious;
+
+    for (final delegate in _shoppingListItemAdditionFlowNavigatorDelegates) {
+      delegate.handleStateChange(
+        currentStateRef: currentStateRef,
+        previousStateRef: previousStateRef,
+      );
+    }
+  }
+
+  void _onNavigatorStateChanged(
+    ValueWithPrevious<DesktopNavigatorState> valueWithPrevious,
+  ) {
+    final (currentState, previousState) = valueWithPrevious;
+
+    for (final observer in _navigatorObservers) {
+      observer.handleStateChange(
+        currentState: currentState,
+        previousState: previousState,
+      );
+    }
+  }
 
   IList<AppRoute> _filterActiveRoutes({
     required IList<AppRoute> routes,
@@ -95,8 +173,8 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
 
     final shouldInitWithSplashScreen = switch (appInitializationFlowStateRef) {
       InitialAppInitializationFlowStateRef() ||
-      LoadingAppInitializationFlowStateRef() => !_desktopNavigator.initialized,
-      LoadedAppInitializationFlowStateRef() => !_desktopNavigator.initialized && uriConfig == null,
+      LoadingAppInitializationFlowStateRef() => !_navigator.initialized,
+      LoadedAppInitializationFlowStateRef() => !_navigator.initialized && uriConfig == null,
     };
 
     if (shouldInitWithSplashScreen) {
@@ -108,7 +186,7 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
 
       const routeToTransition = IMapConst<AppRoute, DesktopRouteTransition>({});
 
-      _desktopNavigator.initialize(
+      _navigator.initialize(
         routes: routes,
         routeToTransition: routeToTransition,
       );
@@ -116,13 +194,13 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
       return;
     }
 
-    final parser = _desktopNavigatorUriConfigParserLocator.getParserByUriConfig(
+    final parser = _navigatorUriConfigParserLocator.getParserByUriConfig(
       uriConfig!,
     );
 
     final requiredRoutes = parser.getRequiredRoutes();
 
-    final navigatorState = _desktopNavigator.initialized ? _desktopNavigator.state : null;
+    final navigatorState = _navigator.initialized ? _navigator.state : null;
 
     final existingRoutes = navigatorState?.routes ?? const IListConst<AppRoute>([]);
 
@@ -170,13 +248,13 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
       updatedRouteToTransition[requiredRoute] = additionRouteTransition;
     }
 
-    if (_desktopNavigator.initialized) {
-      _desktopNavigator.updateWith(
+    if (_navigator.initialized) {
+      _navigator.updateWith(
         routes: () => updatedRoutes.lock,
         routeToTransition: () => updatedRouteToTransition.lock,
       );
     } else {
-      _desktopNavigator.initialize(
+      _navigator.initialize(
         routes: updatedRoutes.lock,
         routeToTransition: updatedRouteToTransition.lock,
       );
@@ -185,20 +263,20 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
 
   @override
   void onRouteAddedToNavigator(AppRoute route) {
-    final updatedRouteToTransition = _desktopNavigator.state.routeToTransition.remove(route);
+    final updatedRouteToTransition = _navigator.state.routeToTransition.remove(route);
 
-    _desktopNavigator.updateWith(
+    _navigator.updateWith(
       routeToTransition: () => updatedRouteToTransition,
     );
   }
 
   @override
   void onRouteRemovedFromNavigator(AppRoute route) {
-    final updatedRoutes = _desktopNavigator.state.routes.remove(route);
+    final updatedRoutes = _navigator.state.routes.remove(route);
 
-    final updatedRouteToTransition = _desktopNavigator.state.routeToTransition.remove(route);
+    final updatedRouteToTransition = _navigator.state.routeToTransition.remove(route);
 
-    _desktopNavigator.updateWith(
+    _navigator.updateWith(
       routes: () => updatedRoutes,
       routeToTransition: () => updatedRouteToTransition,
     );
@@ -218,11 +296,11 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
     }
 
     final activeRoutes = _filterActiveRoutes(
-      routes: _desktopNavigator.state.routes,
-      routeToTransition: _desktopNavigator.state.routeToTransition,
+      routes: _navigator.state.routes,
+      routeToTransition: _navigator.state.routeToTransition,
     );
 
-    final parsers = _desktopNavigatorUriConfigParserLocator.getAllParsers();
+    final parsers = _navigatorUriConfigParserLocator.getAllParsers();
 
     DesktopNavigatorUriConfigMatchResult? bestMatchResult;
 
@@ -302,5 +380,12 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
     _syncNavigatorState(
       appInitializationFlowStateRef: appInitializationFlowStateRef,
     );
+  }
+
+  @override
+  @disposeMethod
+  void dispose() {
+    _shoppingListItemAdditionFlowStateStreamSubscription.cancel();
+    _navigatorStateStreamSubscription.cancel();
   }
 }

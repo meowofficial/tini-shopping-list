@@ -6,6 +6,7 @@ import '../../../../../../core/common/errors/unexpected_state_error.dart';
 import '../../../../../../core/interface_adapters/presentation/base_view_presenter.dart';
 import '../../../../application/refs/flow_state_refs/shopping_list_overview_flow_state_ref.dart';
 import '../../../../application/use_cases/read_shopping_list_overview_flow_state.dart';
+import '../../../../application/use_cases/start_shopping_list_item_addition.dart';
 import '../../../../application/use_cases/watch_shopping_list_overview_flow_state.dart';
 import '../interfaces/shopping_list_item_view_presenter.dart';
 import '../interfaces/shopping_list_overview_screen_view_presenters.dart';
@@ -17,8 +18,10 @@ class ShoppingListOverviewScreenLoadedViewPresenterImpl
     implements ShoppingListOverviewScreenLoadedViewPresenter {
   ShoppingListOverviewScreenLoadedViewPresenterImpl({
     required ReadShoppingListOverviewFlowState readShoppingListOverviewFlowState,
+    required StartShoppingListItemAddition startShoppingListItemAddition,
     required WatchShoppingListOverviewFlowState watchShoppingListOverviewFlowState,
   }) : _readShoppingListOverviewFlowState = readShoppingListOverviewFlowState,
+       _startShoppingListItemAddition = startShoppingListItemAddition,
        _watchShoppingListOverviewFlowState = watchShoppingListOverviewFlowState {
     final shoppingListOverviewFlowState = _readShoppingListOverviewFlowState();
 
@@ -44,6 +47,7 @@ class ShoppingListOverviewScreenLoadedViewPresenterImpl
   }
 
   final ReadShoppingListOverviewFlowState _readShoppingListOverviewFlowState;
+  final StartShoppingListItemAddition _startShoppingListItemAddition;
   final WatchShoppingListOverviewFlowState _watchShoppingListOverviewFlowState;
 
   late final StreamSubscription<ShoppingListOverviewFlowStateRef>
@@ -94,7 +98,7 @@ class ShoppingListOverviewScreenLoadedViewPresenterImpl
 
   @override
   void onShoppingListItemAdditionButtonPressed() {
-    // TODO: implement onShoppingListItemAdditionButtonPressed
+    _startShoppingListItemAddition();
   }
 
   @override

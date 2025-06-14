@@ -23,6 +23,8 @@ import 'app/application/use_cases/watch_app_initialization_flow_state.dart'
     as _i440;
 import 'app/interface_adapters/presentation/navigation/desktop/desktop_navigator.dart'
     as _i760;
+import 'app/interface_adapters/presentation/navigation/desktop/desktop_navigator_presenter.dart'
+    as _i208;
 import 'app/interface_adapters/presentation/navigation/desktop/desktop_navigator_uri_config_parser_locator.dart'
     as _i287;
 import 'app/interface_adapters/presentation/navigation/mobile/mobile_navigator.dart'
@@ -249,6 +251,28 @@ extension GetItInjectableX on _i174.GetIt {
         shoppingListItemFactory: gh<_i829.ShoppingListItemFactory>(),
         shoppingListFlowStore: gh<_i1019.ShoppingListFlowStore>(),
       ),
+    );
+    gh.lazySingleton<_i208.DesktopNavigatorPresenter>(
+      () => _i208.DesktopNavigatorPresenterImpl(
+        navigator: gh<_i760.DesktopNavigator>(),
+        navigatorUriConfigParserLocator:
+            gh<_i287.DesktopNavigatorUriConfigParserLocator>(),
+        uriConfigHolder: gh<_i78.UriConfigHolder>(),
+        uuidGenerator: gh<_i540.UuidGenerator>(),
+        cancelShoppingListItemAddition:
+            gh<_i625.CancelShoppingListItemAddition>(),
+        readAppInitializationFlowState:
+            gh<_i116.ReadAppInitializationFlowState>(),
+        readShoppingListItemAdditionFlowState:
+            gh<_i208.ReadShoppingListItemAdditionFlowState>(),
+        startShoppingListItemAddition:
+            gh<_i323.StartShoppingListItemAddition>(),
+        watchAppInitializationFlowState:
+            gh<_i440.WatchAppInitializationFlowState>(),
+        watchShoppingListItemAdditionFlowState:
+            gh<_i342.WatchShoppingListItemAdditionFlowState>(),
+      ),
+      dispose: (i) => i.dispose(),
     );
     return this;
   }

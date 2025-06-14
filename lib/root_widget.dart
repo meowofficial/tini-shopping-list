@@ -42,8 +42,8 @@ class DesktopRootWidget extends StatefulWidget {
 }
 
 class _DesktopRootWidgetState extends State<DesktopRootWidget> {
-  late final DesktopNavigatorPresenter _desktopNavigatorPresenter;
   late final DesktopRouterDelegate _routerDelegate;
+  late final RouteInformationProvider _routeInformationProvider;
   late final AppRouteInformationParser _routeInformationParser;
   late final BackButtonDispatcher _backButtonDispatcher;
 
@@ -51,23 +51,20 @@ class _DesktopRootWidgetState extends State<DesktopRootWidget> {
   void initState() {
     super.initState();
 
-    _desktopNavigatorPresenter = DesktopNavigatorPresenterImpl(
-      desktopNavigator: di(),
-      uriConfigHolder: di(),
-      desktopNavigatorUriConfigParserLocator: di(),
-      readShoppingListItemAdditionFlowState: di(),
-      startShoppingListItemAddition: di(),
-      watchAppInitializationFlowState: di(),
-      readAppInitializationFlowState: di(),
-      uuidGenerator: di(),
-    );
-
     _routerDelegate = DesktopRouterDelegate(
-      navigatorPresenter: _desktopNavigatorPresenter,
+      navigatorPresenter: di(),
     );
 
     _routeInformationParser = AppRouteInformationParser(
       uriConfigParserLocator: UriConfigParserLocator(),
+    );
+
+    final initialRouteInformation = RouteInformation(
+      uri: Uri.parse(WidgetsBinding.instance.platformDispatcher.defaultRouteName),
+    );
+
+    _routeInformationProvider = PlatformRouteInformationProvider(
+      initialRouteInformation: initialRouteInformation,
     );
 
     _backButtonDispatcher = RootBackButtonDispatcher();
@@ -76,19 +73,15 @@ class _DesktopRootWidgetState extends State<DesktopRootWidget> {
   @override
   void dispose() {
     di.resetLazySingleton<DesktopNavigator>();
+    di.resetLazySingleton<DesktopNavigatorPresenter>();
+    _routerDelegate.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final initialRouteInformation = RouteInformation(
-      uri: Uri.parse(WidgetsBinding.instance.platformDispatcher.defaultRouteName),
-    );
-
     return Router(
-      routeInformationProvider: PlatformRouteInformationProvider(
-        initialRouteInformation: initialRouteInformation,
-      ),
+      routeInformationProvider: _routeInformationProvider,
       routeInformationParser: _routeInformationParser,
       routerDelegate: _routerDelegate,
       backButtonDispatcher: _backButtonDispatcher,
