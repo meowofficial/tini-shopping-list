@@ -3,6 +3,6 @@ import '../../../../../../core/interface_adapters/presentation/view_streamable.d
 import '../views/shopping_list_item_view.dart';
 
 abstract interface class ShoppingListItemViewPresenter
-    implements ViewStreamable<ShoppingListItemView>, Disposable {
+    implements AsyncViewStreamable<ShoppingListItemView>, Disposable {
   String get id;
 }

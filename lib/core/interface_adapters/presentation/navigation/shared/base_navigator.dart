@@ -11,7 +11,10 @@ abstract class BaseNavigator<S> implements StateStreamable<S> {
   late S _state;
 
   @protected
-  final stateStreamController = StreamController<S>.broadcast();
+  final stateStreamController = StreamController<S>.broadcast(sync: false);
+
+  @protected
+  final syncStateStreamController = StreamController<S>.broadcast(sync: true);
 
   @override
   S get state => _state;
@@ -20,6 +23,9 @@ abstract class BaseNavigator<S> implements StateStreamable<S> {
 
   @override
   Stream<S> get stateStream => stateStreamController.stream;
+
+  @override
+  Stream<S> get syncStateStream => syncStateStreamController.stream;
 
   @protected
   void initializeState(S state) {
@@ -30,11 +36,13 @@ abstract class BaseNavigator<S> implements StateStreamable<S> {
   @protected
   void emit(S state) {
     _state = state;
+    syncStateStreamController.add(state);
     stateStreamController.add(state);
   }
 
   @mustCallSuper
   void dispose() {
     stateStreamController.close();
+    syncStateStreamController.close();
   }
 }

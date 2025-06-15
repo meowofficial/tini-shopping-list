@@ -5,7 +5,9 @@ import '../refs/flow_state_refs/shopping_list_overview_flow_state_ref.dart';
 import '../stores/shopping_list_flow_store.dart';
 
 abstract interface class WatchShoppingListOverviewFlowState {
-  Stream<ShoppingListOverviewFlowStateRef> call();
+  Stream<ShoppingListOverviewFlowStateRef> call({
+    bool sync = false,
+  });
 }
 
 @LazySingleton(as: WatchShoppingListOverviewFlowState)
@@ -20,8 +22,14 @@ class WatchShoppingListOverviewFlowStateImpl implements WatchShoppingListOvervie
   final ShoppingListOverviewFlowStateRefMapper _shoppingListOverviewFlowStateRefMapper;
 
   @override
-  Stream<ShoppingListOverviewFlowStateRef> call() {
-    return _shoppingListFlowStore.stateStream.map((state) {
+  Stream<ShoppingListOverviewFlowStateRef> call({
+    bool sync = false,
+  }) {
+    final shoppingListFlowStoreStateStream = sync
+        ? _shoppingListFlowStore.syncStateStream
+        : _shoppingListFlowStore.stateStream;
+
+    return shoppingListFlowStoreStateStream.map((state) {
       return _shoppingListOverviewFlowStateRefMapper(state.shoppingListOverviewFlowState);
     }).distinct();
   }

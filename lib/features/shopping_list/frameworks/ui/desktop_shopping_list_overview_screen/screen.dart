@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../core/frameworks/ui/ui_kit/navigation_bar_title_widget.dart';
 import '../../../../../injection_container.dart';
 import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_presenter.dart';
 import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_view_presenters.dart';
@@ -53,19 +54,12 @@ class _DesktopShoppingListOverviewScreenState extends State<DesktopShoppingListO
             automaticallyImplyLeading: false,
             automaticallyImplyMiddle: false,
             padding: EdgeInsetsDirectional.zero,
-            middle: Text(
-              'Список покупок',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-                height: 1.0,
-                color: Colors.black,
-                fontSize: 20,
-              ),
+            middle: NavigationBarTitleWidget(
+              title: 'Список покупок',
             ),
           ),
           child: SizedBox.expand(
-            child: _buildPageBody(
+            child: _buildScreenBody(
               context: context,
             ),
           ),
@@ -74,7 +68,7 @@ class _DesktopShoppingListOverviewScreenState extends State<DesktopShoppingListO
     );
   }
 
-  Widget _buildPageBody({
+  Widget _buildScreenBody({
     required BuildContext context,
   }) {
     final currentViewPresenter = _presenter.currentViewPresenter;

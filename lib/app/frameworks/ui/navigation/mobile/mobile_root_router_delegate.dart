@@ -66,10 +66,6 @@ class MobileRootRouterDelegate extends RouterDelegate<UriConfig>
         return Navigator(
           key: navigatorKey,
           pages: pages,
-          onDidRemovePage: (page) {
-            final route = (page as AppNavigatorPage).route;
-            print('onDidRemovePage: $route');
-          },
           observers: [
             AppNavigatorObserver(
               onPageAddedToNavigator: (route) {

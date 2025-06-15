@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_route_transition.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
+import '../../../../../features/shopping_list/frameworks/ui/desktop_shopping_list_item_addition_screen/screen.dart';
 import '../../../../../features/shopping_list/frameworks/ui/desktop_shopping_list_overview_screen/screen.dart';
 import '../../../../interface_adapters/presentation/navigation/desktop/desktop_app_routes.dart';
 import '../../../../interface_adapters/presentation/navigation/desktop/desktop_navigator_presenter.dart';
@@ -43,6 +44,11 @@ class DesktopRouterDelegate extends RouterDelegate<UriConfig>
           key: Key(route.id),
         );
 
+      case DesktopShoppingListItemAdditionRoute():
+        widget = DesktopShoppingListItemAdditionScreen(
+          key: Key(route.id),
+        );
+
       default:
         throw StateError('Unexpected state: $route');
     }
@@ -79,10 +85,6 @@ class DesktopRouterDelegate extends RouterDelegate<UriConfig>
         return Navigator(
           key: navigatorKey,
           pages: pages,
-          onDidRemovePage: (page) {
-            final route = (page as AppNavigatorPage).route;
-            print('onDidRemovePage: $route');
-          },
           observers: [
             AppNavigatorObserver(
               onPageAddedToNavigator: _navigatorPresenter.onRouteAddedToNavigator,

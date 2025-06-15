@@ -5,7 +5,9 @@ import '../refs/flow_state_refs/app_initialization_flow_state_ref.dart';
 import '../stores/app_initialization_flow_store.dart';
 
 abstract interface class WatchAppInitializationFlowState {
-  Stream<AppInitializationFlowStateRef> call();
+  Stream<AppInitializationFlowStateRef> call({
+    bool sync = false,
+  });
 }
 
 @LazySingleton(as: WatchAppInitializationFlowState)
@@ -20,8 +22,14 @@ class WatchAppInitializationFlowStateImpl implements WatchAppInitializationFlowS
   final AppInitializationFlowStateRefMapper _appInitializationFlowStateRefMapper;
 
   @override
-  Stream<AppInitializationFlowStateRef> call() {
-    return _appInitializationFlowStore.stateStream.map((state) {
+  Stream<AppInitializationFlowStateRef> call({
+    bool sync = false,
+  }) {
+    final appInitializationFlowStoreStateStream = sync
+        ? _appInitializationFlowStore.syncStateStream
+        : _appInitializationFlowStore.stateStream;
+
+    return appInitializationFlowStoreStateStream.map((state) {
       return _appInitializationFlowStateRefMapper(state.appInitializationFlowState);
     }).distinct();
   }

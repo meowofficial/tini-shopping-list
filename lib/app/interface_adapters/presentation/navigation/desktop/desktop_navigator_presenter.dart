@@ -28,7 +28,7 @@ import 'desktop_navigator_uri_config_parser_locator.dart';
 import 'desktop_navigator_uri_config_parsers.dart';
 
 abstract interface class DesktopNavigatorPresenter
-    implements StateStreamable<DesktopNavigatorState>, Disposable {
+    implements AsyncStateStreamable<DesktopNavigatorState>, Disposable {
   void onRouteAddedToNavigator(AppRoute route);
 
   void onRouteRemovedFromNavigator(AppRoute route);

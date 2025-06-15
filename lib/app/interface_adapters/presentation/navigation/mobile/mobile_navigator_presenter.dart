@@ -19,7 +19,8 @@ import 'mobile_navigator.dart';
 import 'mobile_navigator_uri_config_parser_locator.dart';
 import 'mobile_navigator_uri_config_parsers.dart';
 
-abstract interface class MobileNavigatorPresenter implements StateStreamable<MobileNavigatorState> {
+abstract interface class MobileNavigatorPresenter
+    implements AsyncStateStreamable<MobileNavigatorState> {
   void onRouteAddedToRootNavigator({
     required AppRoute route,
   });

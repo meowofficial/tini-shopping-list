@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ViewBuilder;
 
+import '../../../../../core/frameworks/ui/utils/view_stream_builder.dart';
 import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_item_view_presenter.dart';
 import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/views/shopping_list_item_view.dart';
 
@@ -13,12 +14,9 @@ class ShoppingListItemViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<ShoppingListItemView>(
-      initialData: _presenter.view,
-      stream: _presenter.viewStream,
-      builder: (context, snapshot) {
-        final view = snapshot.requireData;
-
+    return ViewStreamBuilder<ShoppingListItemView>(
+      viewStreamable: _presenter,
+      builder: (context, view) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Container(

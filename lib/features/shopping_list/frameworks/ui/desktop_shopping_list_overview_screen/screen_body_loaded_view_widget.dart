@@ -33,19 +33,27 @@ class ScreenBodyLoadedViewWidget extends StatelessWidget {
                       height: 20,
                     ),
                   ),
-                  SliverList.separated(
-                    itemCount: presenter.shoppingListItemViewPresenters.length,
-                    itemBuilder: (context, index) {
-                      final shoppingListItemViewPresenter =
-                          presenter.shoppingListItemViewPresenters[index];
+                  StreamBuilder(
+                    initialData: presenter.shoppingListItemViewPresenters,
+                    stream: presenter.shoppingListItemViewPresenterStream,
+                    builder: (context, snapshot) {
+                      final shoppingListItemViewPresenters = snapshot.requireData;
 
-                      return ShoppingListItemViewWidget(
-                        presenter: shoppingListItemViewPresenter,
+                      return SliverList.separated(
+                        itemCount: shoppingListItemViewPresenters.length,
+                        itemBuilder: (context, index) {
+                          final shoppingListItemViewPresenter =
+                              shoppingListItemViewPresenters[index];
+
+                          return ShoppingListItemViewWidget(
+                            presenter: shoppingListItemViewPresenter,
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const SizedBox(height: 10);
+                        },
                       );
-                    },
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(height: 10);
-                    },
+                    }
                   ),
                   const SliverSafeArea(
                     sliver: SliverToBoxAdapter(

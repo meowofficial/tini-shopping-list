@@ -49,6 +49,7 @@ class _AppWidgetState extends State<AppWidget> {
             },
             child: Theme(
               data: ThemeData(
+                fontFamily: 'Inter',
                 brightness: brightness,
                 textSelectionTheme: const TextSelectionThemeData(
                   cursorColor: primaryColor,

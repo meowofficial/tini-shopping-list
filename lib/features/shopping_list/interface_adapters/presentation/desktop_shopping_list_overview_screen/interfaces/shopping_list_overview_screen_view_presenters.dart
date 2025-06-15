@@ -10,13 +10,15 @@ sealed class ShoppingListOverviewScreenViewPresenter implements Disposable {}
 abstract interface class ShoppingListOverviewScreenLoadingViewPresenter
     implements
         ShoppingListOverviewScreenViewPresenter,
-        ViewStreamable<ShoppingListOverviewScreenLoadingView> {}
+        AsyncViewStreamable<ShoppingListOverviewScreenLoadingView> {}
 
 abstract interface class ShoppingListOverviewScreenLoadedViewPresenter
     implements
         ShoppingListOverviewScreenViewPresenter,
-        ViewStreamable<ShoppingListOverviewScreenLoadedView> {
+        AsyncViewStreamable<ShoppingListOverviewScreenLoadedView> {
   IList<ShoppingListItemViewPresenter> get shoppingListItemViewPresenters;
+
+  Stream<IList<ShoppingListItemViewPresenter>> get shoppingListItemViewPresenterStream;
 
   void onShoppingListItemAdditionButtonPressed();
 }

@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../../core/common/stream/state_streamable.dart';
 import '../../../../../core/common/stream/with_previous_stream.dart';
+import '../../../../../core/common/typedefs/value_with_previous.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/mobile/mobile_route_transition.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/shared/base_navigator.dart';
@@ -34,7 +35,7 @@ class MobileNavigatorImpl extends BaseNavigator<MobileNavigatorState> implements
   MobileNavigatorImpl();
 
   @override
-  late final Stream<(MobileNavigatorState, MobileNavigatorState)> stateStreamWithPrevious;
+  late final Stream<ValueWithPrevious<MobileNavigatorState>> stateStreamWithPrevious;
 
   @override
   void initialize({

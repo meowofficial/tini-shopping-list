@@ -3,8 +3,8 @@ import 'package:meta/meta.dart';
 import '../../common/stream/snapshot_streamable.dart';
 import '../../domain/entities/base_entity.dart';
 
-abstract class BaseRef<T extends BaseEntity<S>, S> implements SnapshotStreamable<S> {
-  BaseRef({
+abstract class BaseEntityRef<T extends BaseEntity<S>, S> implements SnapshotStreamable<S> {
+  BaseEntityRef({
     required this.entity,
   });
 
@@ -16,4 +16,7 @@ abstract class BaseRef<T extends BaseEntity<S>, S> implements SnapshotStreamable
 
   @override
   Stream<S> get snapshotStream => entity.snapshotStream;
+
+  @override
+  Stream<S> get syncSnapshotStream => entity.syncSnapshotStream;
 }

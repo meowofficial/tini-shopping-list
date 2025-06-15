@@ -4,14 +4,14 @@ import 'package:meta/meta.dart';
 
 import 'view_streamable.dart';
 
-abstract class BaseViewPresenter<V> implements ViewStreamable<V> {
+abstract class BaseViewPresenter<V> implements AsyncViewStreamable<V> {
   BaseViewPresenter();
 
   var _initialized = false;
   late V _view;
 
   @protected
-  final viewStreamController = StreamController<V>.broadcast();
+  final viewStreamController = StreamController<V>.broadcast(sync: false);
 
   @override
   V get view {

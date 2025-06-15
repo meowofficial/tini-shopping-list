@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import '../../../../../../core/common/stream/with_previous_stream.dart';
+import '../../../../../../core/common/typedefs/value_with_previous.dart';
 import '../../../../application/refs/flow_state_refs/shopping_list_overview_flow_state_ref.dart';
 import '../../../../application/use_cases/load_shopping_list_items.dart';
 import '../../../../application/use_cases/read_shopping_list_overview_flow_state.dart';
@@ -48,9 +49,7 @@ class ShoppingListOverviewScreenPresenterImpl implements ShoppingListOverviewScr
   late ShoppingListOverviewScreenViewPresenter _currentViewPresenter;
 
   late final StreamController<void> _updateStreamController;
-  late final StreamSubscription<
-    (ShoppingListOverviewFlowStateRef, ShoppingListOverviewFlowStateRef)
-  >
+  late final StreamSubscription<ValueWithPrevious<ShoppingListOverviewFlowStateRef>>
   _shoppingListOverviewFlowStateStreamSubscription;
 
   @override
@@ -77,7 +76,7 @@ class ShoppingListOverviewScreenPresenterImpl implements ShoppingListOverviewScr
   }
 
   void _onShoppingListOverviewFlowStateChanged(
-    (ShoppingListOverviewFlowStateRef, ShoppingListOverviewFlowStateRef) valueWithPrevious,
+    ValueWithPrevious<ShoppingListOverviewFlowStateRef> valueWithPrevious,
   ) {
     final (
       currentShoppingListOverviewFlowStateRef,
