@@ -5,7 +5,8 @@ import '../../../../../injection_container.dart';
 import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_presenter.dart';
 import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_view_presenters.dart';
 import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/presenters/shopping_list_overview_screen_presenter.dart';
-import 'shopping_list_item_view_widget.dart';
+import 'screen_body_loaded_view_widget.dart';
+import 'screen_body_loading_view_widget.dart';
 
 class DesktopShoppingListOverviewScreen extends StatefulWidget {
   const DesktopShoppingListOverviewScreen({
@@ -80,80 +81,11 @@ class _DesktopShoppingListOverviewScreenState extends State<DesktopShoppingListO
 
     switch (currentViewPresenter) {
       case ShoppingListOverviewScreenLoadingViewPresenter():
-        return const Center(
-          child: SizedBox(
-            width: 50,
-            height: 50,
-            child: CircularProgressIndicator(),
-          ),
-        );
+        return const ScreenBodyLoadingViewWidget();
 
       case ShoppingListOverviewScreenLoadedViewPresenter():
-        return Stack(
-          children: [
-            Column(
-              children: [
-                Expanded(
-                  child: Scrollbar(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                      ),
-                      child: ScrollConfiguration(
-                        behavior: ScrollConfiguration.of(context).copyWith(
-                          scrollbars: false,
-                        ),
-                        child: CustomScrollView(
-                          primary: true,
-                          physics: ScrollConfiguration.of(context).getScrollPhysics(context),
-                          slivers: [
-                            const SliverToBoxAdapter(
-                              child: SizedBox(
-                                height: 20,
-                              ),
-                            ),
-                            SliverList.separated(
-                              itemCount: currentViewPresenter.shoppingListItemViewPresenters.length,
-                              itemBuilder: (context, index) {
-                                final shoppingListItemViewPresenter =
-                                    currentViewPresenter.shoppingListItemViewPresenters[index];
-
-                                return ShoppingListItemViewWidget(
-                                  presenter: shoppingListItemViewPresenter,
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return const SizedBox(height: 10);
-                              },
-                            ),
-                            const SliverSafeArea(
-                              sliver: SliverToBoxAdapter(
-                                child: SizedBox(
-                                  height: 20,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Positioned(
-              right: 40,
-              bottom: 40,
-              child: FloatingActionButton(
-                backgroundColor: Theme.of(context).primaryColor,
-                onPressed: currentViewPresenter.onShoppingListItemAdditionButtonPressed,
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
+        return ScreenBodyLoadedViewWidget(
+          presenter: currentViewPresenter,
         );
     }
   }
