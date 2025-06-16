@@ -53,7 +53,7 @@ class ScreenBodyLoadedViewWidget extends StatelessWidget {
                           return const SizedBox(height: 10);
                         },
                       );
-                    }
+                    },
                   ),
                   const SliverSafeArea(
                     sliver: SliverToBoxAdapter(

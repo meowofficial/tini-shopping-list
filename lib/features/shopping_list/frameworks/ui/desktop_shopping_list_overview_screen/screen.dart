@@ -27,10 +27,9 @@ class _DesktopShoppingListOverviewScreenState extends State<DesktopShoppingListO
     super.initState();
 
     _presenter = ShoppingListOverviewScreenPresenterImpl(
+      shoppingListOverviewScreenStatePresenterFactory: di(),
       loadShoppingListItems: di(),
       readShoppingListOverviewFlowState: di(),
-      startShoppingListItemAddition: di(),
-      toggleShoppingListItemCheck: di(),
       watchShoppingListOverviewFlowState: di(),
     );
   }

@@ -6,24 +6,23 @@ import '../../../../../../core/interface_adapters/presentation/base_view_present
 import '../../../../application/refs/flow_state_refs/shopping_list_overview_flow_state_ref.dart';
 import '../../../../application/use_cases/read_shopping_list_overview_flow_state.dart';
 import '../../../../application/use_cases/start_shopping_list_item_addition.dart';
-import '../../../../application/use_cases/toggle_shopping_list_item_check.dart';
 import '../../../../application/use_cases/watch_shopping_list_overview_flow_state.dart';
 import '../interfaces/shopping_list_item_presenter.dart';
+import '../interfaces/shopping_list_item_presenter_factory.dart';
 import '../interfaces/shopping_list_overview_screen_state_presenters.dart';
 import '../views/shopping_list_overview_screen_views.dart';
-import 'shopping_list_item_presenter.dart';
 
 class ShoppingListOverviewScreenLoadedStatePresenterImpl
     extends BaseViewPresenter<ShoppingListOverviewScreenLoadedView>
     implements ShoppingListOverviewScreenLoadedStatePresenter {
   ShoppingListOverviewScreenLoadedStatePresenterImpl({
+    required ShoppingListItemPresenterFactory shoppingListItemPresenterFactory,
     required ReadShoppingListOverviewFlowState readShoppingListOverviewFlowState,
     required StartShoppingListItemAddition startShoppingListItemAddition,
-    required ToggleShoppingListItemCheck toggleShoppingListItemCheck,
     required WatchShoppingListOverviewFlowState watchShoppingListOverviewFlowState,
-  }) : _readShoppingListOverviewFlowState = readShoppingListOverviewFlowState,
+  }) : _shoppingListItemPresenterFactory = shoppingListItemPresenterFactory,
+       _readShoppingListOverviewFlowState = readShoppingListOverviewFlowState,
        _startShoppingListItemAddition = startShoppingListItemAddition,
-       _toggleShoppingListItemCheck = toggleShoppingListItemCheck,
        _watchShoppingListOverviewFlowState = watchShoppingListOverviewFlowState {
     _shoppingListItemViewPresenterStreamController =
         StreamController<IList<ShoppingListItemPresenter>>.broadcast();
@@ -33,9 +32,8 @@ class ShoppingListOverviewScreenLoadedStatePresenterImpl
 
     _shoppingListItemViewPresenters = shoppingListOverviewFlowState.shoppingListItemRefs
         .map<ShoppingListItemPresenter>((shoppingListItemRef) {
-          return ShoppingListItemPresenterImpl(
+          return _shoppingListItemPresenterFactory.create(
             shoppingListItemRef: shoppingListItemRef,
-            toggleShoppingListItemCheck: _toggleShoppingListItemCheck,
           );
         })
         .toIList();
@@ -49,9 +47,10 @@ class ShoppingListOverviewScreenLoadedStatePresenterImpl
     initializeView(view);
   }
 
+  final ShoppingListItemPresenterFactory _shoppingListItemPresenterFactory;
+
   final ReadShoppingListOverviewFlowState _readShoppingListOverviewFlowState;
   final StartShoppingListItemAddition _startShoppingListItemAddition;
-  final ToggleShoppingListItemCheck _toggleShoppingListItemCheck;
   final WatchShoppingListOverviewFlowState _watchShoppingListOverviewFlowState;
 
   late final StreamController<IList<ShoppingListItemPresenter>>
@@ -92,9 +91,8 @@ class ShoppingListOverviewScreenLoadedStatePresenterImpl
       final correspondingPresenter = existingPresenterMap.remove(shoppingListItemId);
 
       if (correspondingPresenter == null) {
-        final presenter = ShoppingListItemPresenterImpl(
+        final presenter = _shoppingListItemPresenterFactory.create(
           shoppingListItemRef: shoppingListItemRef,
-          toggleShoppingListItemCheck: _toggleShoppingListItemCheck,
         );
 
         updatedPresenters.add(presenter);

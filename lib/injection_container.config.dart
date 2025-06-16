@@ -78,6 +78,14 @@ import 'features/shopping_list/domain/factories/shopping_list_item_factory.dart'
     as _i829;
 import 'features/shopping_list/domain/validation/shopping_list_item/validator.dart'
     as _i1011;
+import 'features/shopping_list/interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_item_presenter_factory.dart'
+    as _i127;
+import 'features/shopping_list/interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_state_presenter_factory.dart'
+    as _i432;
+import 'features/shopping_list/interface_adapters/presentation/desktop_shopping_list_overview_screen/presenters/shopping_list_item_presenter_factory.dart'
+    as _i61;
+import 'features/shopping_list/interface_adapters/presentation/desktop_shopping_list_overview_screen/presenters/shopping_list_overview_screen_state_presenter_factory.dart'
+    as _i357;
 import 'features/shopping_list/interface_adapters/repositories/shopping_list_repository.dart'
     as _i209;
 
@@ -95,6 +103,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i760.DesktopNavigator>(
       () => _i760.DesktopNavigatorImpl(),
       dispose: (i) => i.dispose(),
+    );
+    gh.lazySingleton<_i127.ShoppingListItemPresenterFactory>(
+      () => const _i61.ShoppingListItemPresenterFactoryImpl(),
     );
     gh.lazySingleton<_i28.ShoppingListItemEditingFlowStateRefMapper>(
       () => const _i28.ShoppingListItemEditingFlowStateRefMapperImpl(),
@@ -126,6 +137,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i972.ShoppingListRepository>(
       () => const _i209.ShoppingListRepositoryImpl(),
+    );
+    gh.lazySingleton<_i432.ShoppingListOverviewScreenStatePresenterFactory>(
+      () => const _i357.ShoppingListOverviewScreenStatePresenterFactoryImpl(),
     );
     gh.lazySingleton<_i879.AppInitializationFlowStateRefMapper>(
       () => const _i879.AppInitializationFlowStateRefMapperImpl(),
