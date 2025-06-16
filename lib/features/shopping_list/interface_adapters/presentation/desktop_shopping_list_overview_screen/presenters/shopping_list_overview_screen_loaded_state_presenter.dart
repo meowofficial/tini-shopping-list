@@ -6,32 +6,36 @@ import '../../../../../../core/interface_adapters/presentation/base_view_present
 import '../../../../application/refs/flow_state_refs/shopping_list_overview_flow_state_ref.dart';
 import '../../../../application/use_cases/read_shopping_list_overview_flow_state.dart';
 import '../../../../application/use_cases/start_shopping_list_item_addition.dart';
+import '../../../../application/use_cases/toggle_shopping_list_item_check.dart';
 import '../../../../application/use_cases/watch_shopping_list_overview_flow_state.dart';
-import '../interfaces/shopping_list_item_view_presenter.dart';
-import '../interfaces/shopping_list_overview_screen_view_presenters.dart';
+import '../interfaces/shopping_list_item_presenter.dart';
+import '../interfaces/shopping_list_overview_screen_state_presenters.dart';
 import '../views/shopping_list_overview_screen_views.dart';
-import 'shopping_list_item_view_presenter.dart';
+import 'shopping_list_item_presenter.dart';
 
-class ShoppingListOverviewScreenLoadedViewPresenterImpl
+class ShoppingListOverviewScreenLoadedStatePresenterImpl
     extends BaseViewPresenter<ShoppingListOverviewScreenLoadedView>
-    implements ShoppingListOverviewScreenLoadedViewPresenter {
-  ShoppingListOverviewScreenLoadedViewPresenterImpl({
+    implements ShoppingListOverviewScreenLoadedStatePresenter {
+  ShoppingListOverviewScreenLoadedStatePresenterImpl({
     required ReadShoppingListOverviewFlowState readShoppingListOverviewFlowState,
     required StartShoppingListItemAddition startShoppingListItemAddition,
+    required ToggleShoppingListItemCheck toggleShoppingListItemCheck,
     required WatchShoppingListOverviewFlowState watchShoppingListOverviewFlowState,
   }) : _readShoppingListOverviewFlowState = readShoppingListOverviewFlowState,
        _startShoppingListItemAddition = startShoppingListItemAddition,
+       _toggleShoppingListItemCheck = toggleShoppingListItemCheck,
        _watchShoppingListOverviewFlowState = watchShoppingListOverviewFlowState {
     _shoppingListItemViewPresenterStreamController =
-        StreamController<IList<ShoppingListItemViewPresenter>>.broadcast();
+        StreamController<IList<ShoppingListItemPresenter>>.broadcast();
 
     final shoppingListOverviewFlowState =
         _readShoppingListOverviewFlowState() as LoadedShoppingListOverviewFlowStateRef;
 
     _shoppingListItemViewPresenters = shoppingListOverviewFlowState.shoppingListItemRefs
-        .map<ShoppingListItemViewPresenter>((shoppingListItemRef) {
-          return ShoppingListItemViewPresenterImpl(
+        .map<ShoppingListItemPresenter>((shoppingListItemRef) {
+          return ShoppingListItemPresenterImpl(
             shoppingListItemRef: shoppingListItemRef,
+            toggleShoppingListItemCheck: _toggleShoppingListItemCheck,
           );
         })
         .toIList();
@@ -47,21 +51,22 @@ class ShoppingListOverviewScreenLoadedViewPresenterImpl
 
   final ReadShoppingListOverviewFlowState _readShoppingListOverviewFlowState;
   final StartShoppingListItemAddition _startShoppingListItemAddition;
+  final ToggleShoppingListItemCheck _toggleShoppingListItemCheck;
   final WatchShoppingListOverviewFlowState _watchShoppingListOverviewFlowState;
 
-  late final StreamController<IList<ShoppingListItemViewPresenter>>
+  late final StreamController<IList<ShoppingListItemPresenter>>
   _shoppingListItemViewPresenterStreamController;
 
   late final StreamSubscription<ShoppingListOverviewFlowStateRef>
   _shoppingListOverviewFlowStateStreamSubscription;
-  late IList<ShoppingListItemViewPresenter> _shoppingListItemViewPresenters;
+  late IList<ShoppingListItemPresenter> _shoppingListItemViewPresenters;
 
   @override
-  IList<ShoppingListItemViewPresenter> get shoppingListItemViewPresenters =>
+  IList<ShoppingListItemPresenter> get shoppingListItemViewPresenters =>
       _shoppingListItemViewPresenters;
 
   @override
-  Stream<IList<ShoppingListItemViewPresenter>> get shoppingListItemViewPresenterStream =>
+  Stream<IList<ShoppingListItemPresenter>> get shoppingListItemViewPresenterStream =>
       _shoppingListItemViewPresenterStreamController.stream;
 
   void _onShoppingListOverviewFlowStateChanged(
@@ -75,11 +80,11 @@ class ShoppingListOverviewScreenLoadedViewPresenterImpl
 
     final existingPresenterMap = Map.fromEntries(
       _shoppingListItemViewPresenters.map((it) {
-        return MapEntry(it.id, it);
+        return MapEntry(it.shoppingListItemId, it);
       }),
     );
 
-    final updatedPresenters = <ShoppingListItemViewPresenter>[];
+    final updatedPresenters = <ShoppingListItemPresenter>[];
 
     for (final shoppingListItemRef in shoppingListItemRefs) {
       final shoppingListItemId = shoppingListItemRef.snapshot.id;
@@ -87,8 +92,9 @@ class ShoppingListOverviewScreenLoadedViewPresenterImpl
       final correspondingPresenter = existingPresenterMap.remove(shoppingListItemId);
 
       if (correspondingPresenter == null) {
-        final presenter = ShoppingListItemViewPresenterImpl(
+        final presenter = ShoppingListItemPresenterImpl(
           shoppingListItemRef: shoppingListItemRef,
+          toggleShoppingListItemCheck: _toggleShoppingListItemCheck,
         );
 
         updatedPresenters.add(presenter);

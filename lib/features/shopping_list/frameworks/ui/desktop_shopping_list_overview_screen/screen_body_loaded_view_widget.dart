@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_view_presenters.dart';
+import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_state_presenters.dart';
 import 'shopping_list_item_view_widget.dart';
 
 class ScreenBodyLoadedViewWidget extends StatelessWidget {
@@ -9,7 +9,7 @@ class ScreenBodyLoadedViewWidget extends StatelessWidget {
     super.key,
   });
 
-  final ShoppingListOverviewScreenLoadedViewPresenter presenter;
+  final ShoppingListOverviewScreenLoadedStatePresenter presenter;
 
   @override
   Widget build(BuildContext context) {

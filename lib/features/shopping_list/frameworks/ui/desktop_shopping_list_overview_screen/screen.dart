@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../../core/frameworks/ui/ui_kit/navigation_bar_title_widget.dart';
 import '../../../../../injection_container.dart';
 import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_presenter.dart';
-import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_view_presenters.dart';
+import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_state_presenters.dart';
 import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/presenters/shopping_list_overview_screen_presenter.dart';
 import 'screen_body_loaded_view_widget.dart';
 import 'screen_body_loading_view_widget.dart';
@@ -30,6 +30,7 @@ class _DesktopShoppingListOverviewScreenState extends State<DesktopShoppingListO
       loadShoppingListItems: di(),
       readShoppingListOverviewFlowState: di(),
       startShoppingListItemAddition: di(),
+      toggleShoppingListItemCheck: di(),
       watchShoppingListOverviewFlowState: di(),
     );
   }
@@ -74,10 +75,10 @@ class _DesktopShoppingListOverviewScreenState extends State<DesktopShoppingListO
     final currentViewPresenter = _presenter.currentViewPresenter;
 
     switch (currentViewPresenter) {
-      case ShoppingListOverviewScreenLoadingViewPresenter():
+      case ShoppingListOverviewScreenLoadingStatePresenter():
         return const ScreenBodyLoadingViewWidget();
 
-      case ShoppingListOverviewScreenLoadedViewPresenter():
+      case ShoppingListOverviewScreenLoadedStatePresenter():
         return ScreenBodyLoadedViewWidget(
           presenter: currentViewPresenter,
         );

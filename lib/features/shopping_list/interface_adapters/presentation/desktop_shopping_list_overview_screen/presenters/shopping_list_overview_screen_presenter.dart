@@ -6,21 +6,24 @@ import '../../../../application/refs/flow_state_refs/shopping_list_overview_flow
 import '../../../../application/use_cases/load_shopping_list_items.dart';
 import '../../../../application/use_cases/read_shopping_list_overview_flow_state.dart';
 import '../../../../application/use_cases/start_shopping_list_item_addition.dart';
+import '../../../../application/use_cases/toggle_shopping_list_item_check.dart';
 import '../../../../application/use_cases/watch_shopping_list_overview_flow_state.dart';
 import '../interfaces/shopping_list_overview_screen_presenter.dart';
-import '../interfaces/shopping_list_overview_screen_view_presenters.dart';
-import 'shopping_list_overview_screen_loaded_view_presenter.dart';
-import 'shopping_list_overview_screen_loading_view_presenter.dart';
+import '../interfaces/shopping_list_overview_screen_state_presenters.dart';
+import 'shopping_list_overview_screen_loaded_state_presenter.dart';
+import 'shopping_list_overview_screen_loading_state_presenter.dart';
 
 class ShoppingListOverviewScreenPresenterImpl implements ShoppingListOverviewScreenPresenter {
   ShoppingListOverviewScreenPresenterImpl({
     required LoadShoppingListItems loadShoppingListItems,
     required ReadShoppingListOverviewFlowState readShoppingListOverviewFlowState,
     required StartShoppingListItemAddition startShoppingListItemAddition,
+    required ToggleShoppingListItemCheck toggleShoppingListItemCheck,
     required WatchShoppingListOverviewFlowState watchShoppingListOverviewFlowState,
   }) : _loadShoppingListItems = loadShoppingListItems,
        _readShoppingListOverviewFlowState = readShoppingListOverviewFlowState,
        _startShoppingListItemAddition = startShoppingListItemAddition,
+       _toggleShoppingListItemCheck = toggleShoppingListItemCheck,
        _watchShoppingListOverviewFlowState = watchShoppingListOverviewFlowState {
     _updateStreamController = StreamController<void>.broadcast();
 
@@ -44,33 +47,35 @@ class ShoppingListOverviewScreenPresenterImpl implements ShoppingListOverviewScr
   final LoadShoppingListItems _loadShoppingListItems;
   final ReadShoppingListOverviewFlowState _readShoppingListOverviewFlowState;
   final StartShoppingListItemAddition _startShoppingListItemAddition;
+  final ToggleShoppingListItemCheck _toggleShoppingListItemCheck;
   final WatchShoppingListOverviewFlowState _watchShoppingListOverviewFlowState;
 
-  late ShoppingListOverviewScreenViewPresenter _currentViewPresenter;
+  late ShoppingListOverviewScreenStatePresenter _currentViewPresenter;
 
   late final StreamController<void> _updateStreamController;
   late final StreamSubscription<ValueWithPrevious<ShoppingListOverviewFlowStateRef>>
   _shoppingListOverviewFlowStateStreamSubscription;
 
   @override
-  ShoppingListOverviewScreenViewPresenter get currentViewPresenter => _currentViewPresenter;
+  ShoppingListOverviewScreenStatePresenter get currentViewPresenter => _currentViewPresenter;
 
   @override
   Stream<void> get updateStream => _updateStreamController.stream;
 
-  ShoppingListOverviewScreenViewPresenter _createCurrentViewPresenter({
+  ShoppingListOverviewScreenStatePresenter _createCurrentViewPresenter({
     required ShoppingListOverviewFlowStateRef shoppingListOverviewFlowStateRef,
   }) {
     switch (shoppingListOverviewFlowStateRef) {
       case InitialShoppingListOverviewFlowStateRef():
       case LoadingShoppingListOverviewFlowStateRef():
-        return ShoppingListOverviewScreenLoadingViewPresenterImpl();
+        return ShoppingListOverviewScreenLoadingStatePresenterImpl();
 
       case LoadedShoppingListOverviewFlowStateRef():
-        return ShoppingListOverviewScreenLoadedViewPresenterImpl(
+        return ShoppingListOverviewScreenLoadedStatePresenterImpl(
           readShoppingListOverviewFlowState: _readShoppingListOverviewFlowState,
           watchShoppingListOverviewFlowState: _watchShoppingListOverviewFlowState,
           startShoppingListItemAddition: _startShoppingListItemAddition,
+          toggleShoppingListItemCheck: _toggleShoppingListItemCheck,
         );
     }
   }

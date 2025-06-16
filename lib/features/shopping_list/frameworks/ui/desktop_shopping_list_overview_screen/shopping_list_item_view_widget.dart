@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart' hide ViewBuilder;
 
 import '../../../../../core/frameworks/ui/utils/view_stream_builder.dart';
-import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_item_view_presenter.dart';
+import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_item_presenter.dart';
 import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/views/shopping_list_item_view.dart';
 
 class ShoppingListItemViewWidget extends StatelessWidget {
   const ShoppingListItemViewWidget({
-    required ShoppingListItemViewPresenter presenter,
+    required ShoppingListItemPresenter presenter,
     super.key,
   }) : _presenter = presenter;
 
-  final ShoppingListItemViewPresenter _presenter;
+  final ShoppingListItemPresenter _presenter;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +28,8 @@ class ShoppingListItemViewWidget extends StatelessWidget {
               children: [
                 Checkbox(
                   value: view.checked,
-                  onChanged: (selected) {
-                    // _presenter.onCheckboxPressed();
+                  onChanged: (_) {
+                    _presenter.onCheckboxPressed();
                   },
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   splashRadius: 0,
