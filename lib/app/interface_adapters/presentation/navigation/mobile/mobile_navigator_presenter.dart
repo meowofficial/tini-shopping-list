@@ -29,12 +29,21 @@ abstract interface class MobileNavigatorPresenter
     required AppRoute route,
   });
 
+  void onRootRoutePopped({
+    required AppRoute route,
+  });
+
   void onRouteAddedToHomeTabNavigator({
     required AppRoute route,
     required MobileHomeTab homeTab,
   });
 
   void onRouteRemovedFromHomeTabNavigator({
+    required AppRoute route,
+    required MobileHomeTab homeTab,
+  });
+
+  void onHomeTabRoutePopped({
     required AppRoute route,
     required MobileHomeTab homeTab,
   });
@@ -312,6 +321,80 @@ class MobileNavigatorPresenterImpl implements MobileNavigatorPresenter {
 
     _mobileNavigator.updateWith(
       rootStackState: () => updatedRootStackState,
+    );
+  }
+
+  @override
+  void onRootRoutePopped({
+    required AppRoute route,
+  }) {
+    final stackState = _mobileNavigator.state.rootStackState;
+
+    if (!stackState.routes.contains(route)) {
+      return;
+    }
+
+    final transition = stackState.routeToTransition[route];
+
+    if (transition is MobileRemovalRouteTransition) {
+      return;
+    }
+
+    const updatedTransition = MobileRemovalRouteTransition(
+      displayTransition: false,
+    );
+
+    final updatedRouteToTransition = stackState.routeToTransition.add(
+      route,
+      updatedTransition,
+    );
+
+    final updatedStackState = stackState.copyWith(
+      routeToTransition: () => updatedRouteToTransition,
+    );
+
+    _mobileNavigator.updateWith(
+      rootStackState: () => updatedStackState,
+    );
+  }
+
+  @override
+  void onHomeTabRoutePopped({
+    required AppRoute route,
+    required MobileHomeTab homeTab,
+  }) {
+    final stackState = _mobileNavigator.state.homeTabStackStateMap[homeTab]!;
+
+    if (!stackState.routes.contains(route)) {
+      return;
+    }
+
+    final transition = stackState.routeToTransition[route];
+
+    if (transition is MobileRemovalRouteTransition) {
+      return;
+    }
+
+    const updatedTransition = MobileRemovalRouteTransition(
+      displayTransition: false,
+    );
+
+    final updatedRouteToTransition = stackState.routeToTransition.add(
+      route,
+      updatedTransition,
+    );
+
+    final updatedStackState = stackState.copyWith(
+      routeToTransition: () => updatedRouteToTransition,
+    );
+
+    final updatedHomeTabStackStateMap = _mobileNavigator.state.homeTabStackStateMap.add(
+      homeTab,
+      updatedStackState,
+    );
+
+    _mobileNavigator.updateWith(
+      homeTabStackStateMap: () => updatedHomeTabStackStateMap,
     );
   }
 

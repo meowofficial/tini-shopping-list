@@ -85,10 +85,25 @@ class DesktopRouterDelegate extends RouterDelegate<UriConfig>
         return Navigator(
           key: navigatorKey,
           pages: pages,
+          onDidRemovePage: (page) {
+            final route = (page as AppNavigatorPage).route;
+
+            _navigatorPresenter.onRoutePopped(
+              route: route,
+            );
+          },
           observers: [
             AppNavigatorObserver(
-              onPageAddedToNavigator: _navigatorPresenter.onRouteAddedToNavigator,
-              onPageRemovedFromNavigator: _navigatorPresenter.onRouteRemovedFromNavigator,
+              onPageAddedToNavigator: (route) {
+                _navigatorPresenter.onRouteAddedToNavigator(
+                  route: route,
+                );
+              },
+              onPageRemovedFromNavigator: (route) {
+                _navigatorPresenter.onRouteRemovedFromNavigator(
+                  route: route,
+                );
+              },
             ),
           ],
           transitionDelegate: DesktopRouteTransitionDelegate(

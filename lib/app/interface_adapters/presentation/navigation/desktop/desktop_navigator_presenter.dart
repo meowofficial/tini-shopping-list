@@ -29,9 +29,17 @@ import 'desktop_navigator_uri_config_parsers.dart';
 
 abstract interface class DesktopNavigatorPresenter
     implements AsyncStateStreamable<DesktopNavigatorState>, Disposable {
-  void onRouteAddedToNavigator(AppRoute route);
+  void onRouteAddedToNavigator({
+    required AppRoute route,
+  });
 
-  void onRouteRemovedFromNavigator(AppRoute route);
+  void onRouteRemovedFromNavigator({
+    required AppRoute route,
+  });
+
+  void onRoutePopped({
+    required AppRoute route,
+  });
 
   void onPlatformUriConfigChanged(UriConfig uriConfig);
 
@@ -262,7 +270,9 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
   }
 
   @override
-  void onRouteAddedToNavigator(AppRoute route) {
+  void onRouteAddedToNavigator({
+    required AppRoute route,
+  }) {
     final updatedRouteToTransition = _navigator.state.routeToTransition.remove(route);
 
     _navigator.updateWith(
@@ -271,13 +281,43 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
   }
 
   @override
-  void onRouteRemovedFromNavigator(AppRoute route) {
+  void onRouteRemovedFromNavigator({
+    required AppRoute route,
+  }) {
     final updatedRoutes = _navigator.state.routes.remove(route);
 
     final updatedRouteToTransition = _navigator.state.routeToTransition.remove(route);
 
     _navigator.updateWith(
       routes: () => updatedRoutes,
+      routeToTransition: () => updatedRouteToTransition,
+    );
+  }
+
+  @override
+  void onRoutePopped({
+    required AppRoute route,
+  }) {
+    if (!_navigator.state.routes.contains(route)) {
+      return;
+    }
+
+    final transition = _navigator.state.routeToTransition[route];
+
+    if (transition is DesktopRemovalRouteTransition) {
+      return;
+    }
+
+    const updatedTransition = DesktopRemovalRouteTransition(
+      displayTransition: false,
+    );
+
+    final updatedRouteToTransition = _navigator.state.routeToTransition.add(
+      route,
+      updatedTransition,
+    );
+
+    _navigator.updateWith(
       routeToTransition: () => updatedRouteToTransition,
     );
   }
