@@ -2,12 +2,12 @@ import 'package:equatable/equatable.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../../core/common/stream/state_streamable.dart';
-import '../../../../../core/common/stream/with_previous_stream.dart';
-import '../../../../../core/common/typedefs/value_with_previous.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_route_transition.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/shared/base_navigator.dart';
+import '../../../../common/stream/state_streamable.dart';
+import '../../../../common/stream/with_previous_stream.dart';
+import '../../../../common/typedefs/value_with_previous.dart';
+import '../shared/app_routes.dart';
+import '../shared/base_navigator.dart';
+import 'desktop_route_transition.dart';
 
 abstract interface class DesktopNavigator implements StateStreamable<DesktopNavigatorState> {
   bool get initialized;

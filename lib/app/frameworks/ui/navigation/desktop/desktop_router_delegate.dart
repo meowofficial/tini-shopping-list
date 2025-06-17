@@ -1,31 +1,40 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../core/frameworks/ui/navigation/desktop/desktop_route_transition_delegate.dart';
+import '../../../../../core/frameworks/ui/navigation/shared/navigator_observer.dart';
+import '../../../../../core/frameworks/ui/navigation/shared/navigator_page.dart';
+import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_app_routes.dart';
+import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_navigator.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_route_transition.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
+import '../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
 import '../../../../../features/shopping_list/frameworks/ui/desktop_shopping_list_item_addition_screen/screen.dart';
 import '../../../../../features/shopping_list/frameworks/ui/desktop_shopping_list_overview_screen/screen.dart';
-import '../../../../interface_adapters/presentation/navigation/desktop/desktop_app_routes.dart';
 import '../../../../interface_adapters/presentation/navigation/desktop/desktop_navigator_presenter.dart';
-import '../../../../interface_adapters/presentation/navigation/shared/app_routes.dart';
 import '../../../../interface_adapters/presentation/navigation/shared/uri_configs.dart';
-import '../shared/navigator_observer.dart';
-import '../shared/navigator_page.dart';
-import 'desktop_route_transition_delegate.dart';
-
-final _navigatorKey = GlobalKey<NavigatorState>();
 
 class DesktopRouterDelegate extends RouterDelegate<UriConfig>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<UriConfig> {
   DesktopRouterDelegate({
     required DesktopNavigatorPresenter navigatorPresenter,
-  }) : _navigatorPresenter = navigatorPresenter,
-       navigatorKey = _navigatorKey;
+  }) : _navigatorPresenter = navigatorPresenter {
+    _navigatorStateStreamSubscription = _navigatorPresenter.stateStream.listen(
+      _onNavigatorStateChanged,
+    );
+  }
 
   @override
-  final GlobalKey<NavigatorState> navigatorKey;
+  final navigatorKey = GlobalKey<NavigatorState>();
 
   final DesktopNavigatorPresenter _navigatorPresenter;
+
+  late final StreamSubscription<DesktopNavigatorState> _navigatorStateStreamSubscription;
+
+  void _onNavigatorStateChanged(DesktopNavigatorState navigatorState) {
+    notifyListeners();
+  }
 
   AppNavigatorPage _createNavigatorPage(AppRoute route) {
     late final Widget widget;
@@ -50,7 +59,7 @@ class DesktopRouterDelegate extends RouterDelegate<UriConfig>
         );
 
       default:
-        throw StateError('Unexpected state: $route');
+        throw StateError('Unexpected route: $route');
     }
 
     return AppNavigatorPage(
@@ -58,6 +67,12 @@ class DesktopRouterDelegate extends RouterDelegate<UriConfig>
       child: widget,
       fullscreenDialog: fullscreenDialog,
     );
+  }
+
+  @override
+  void dispose() {
+    _navigatorStateStreamSubscription.cancel();
+    super.dispose();
   }
 
   @override

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
+import '../shared/app_routes.dart';
 
 class MobileHomeRoute extends Equatable implements AppRoute {
   const MobileHomeRoute({

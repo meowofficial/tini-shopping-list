@@ -1,53 +1,81 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../core/interface_adapters/presentation/navigation/mobile/mobile_route_transition.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
-import '../../../../interface_adapters/presentation/navigation/mobile/mobile_navigator_presenter.dart';
-import '../../../../interface_adapters/presentation/navigation/shared/uri_configs.dart';
-import '../shared/navigator_observer.dart';
-import '../shared/navigator_page.dart';
-import 'mobile_route_transition_delegate.dart';
-
-final _navigatorKey = GlobalKey<NavigatorState>();
+import '../../../../../../core/frameworks/ui/navigation/mobile/mobile_route_transition_delegate.dart';
+import '../../../../../../core/frameworks/ui/navigation/shared/navigator_observer.dart';
+import '../../../../../../core/frameworks/ui/navigation/shared/navigator_page.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/mobile/mobile_app_routes.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/mobile/mobile_navigator.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/mobile/mobile_route_transition.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
+import '../../../../../interface_adapters/presentation/navigation/mobile/mobile_navigator_presenter.dart';
+import '../../../../../interface_adapters/presentation/navigation/shared/uri_configs.dart';
+import '../../../mobile_home_screen/screen.dart';
 
 class MobileRootRouterDelegate extends RouterDelegate<UriConfig>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<UriConfig> {
   MobileRootRouterDelegate({
     required MobileNavigatorPresenter navigatorPresenter,
-  }) : _navigatorPresenter = navigatorPresenter,
-       navigatorKey = _navigatorKey;
+  }) : _navigatorPresenter = navigatorPresenter {
+    _navigatorStateStreamSubscription = _navigatorPresenter.stateStream.listen(
+      _onNavigatorStateChanged,
+    );
+  }
 
   @override
-  final GlobalKey<NavigatorState> navigatorKey;
+  final navigatorKey = GlobalKey<NavigatorState>();
 
   final MobileNavigatorPresenter _navigatorPresenter;
 
+  late final StreamSubscription<MobileNavigatorState> _navigatorStateStreamSubscription;
+
+  void _onNavigatorStateChanged(MobileNavigatorState navigatorState) {
+    notifyListeners();
+  }
+
   AppNavigatorPage _createNavigatorPage(AppRoute route) {
-    final Widget page;
+    late final Widget widget;
 
     const fullscreenDialog = false;
 
-    // switch (route) {
-    //   default:
-    //     throw StateError('Unexpected state');
-    // }
+    switch (route) {
+      case SplashRoute():
+        widget = Container(
+          key: Key(route.id),
+          color: Colors.white,
+        );
+
+      case MobileHomeRoute():
+        widget = MobileHomeScreen(
+          key: Key(route.id),
+        );
+
+      default:
+        throw StateError('Unexpected route: $route');
+    }
 
     return AppNavigatorPage(
       route: route,
-      child: Container(
-        color: Colors.black,
-      ),
+      child: widget,
       fullscreenDialog: fullscreenDialog,
     );
   }
 
   @override
+  void dispose() {
+    _navigatorStateStreamSubscription.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder(
+      initialData: _navigatorPresenter.state,
       stream: _navigatorPresenter.stateStream,
       builder: (context, snapshot) {
-        final state = snapshot.data ?? _navigatorPresenter.state;
+        final state = snapshot.requireData;
 
         final pages = state.rootStackState.routes
             .where((route) {

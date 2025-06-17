@@ -3,10 +3,9 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../../core/common/uuid/uuid_generator.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
-import '../../../../../features/home/interface_adapters/presentation/mobile_home_tab.dart';
-import '../../../../../features/shopping_list/application/refs/flow_state_refs/shopping_list_item_addition_flow_state_ref.dart';
-import '../mobile/mobile_app_routes.dart';
+import '../../../../../core/interface_adapters/presentation/navigation/mobile/mobile_app_routes.dart';
+import '../../../../../core/interface_adapters/presentation/navigation/mobile/mobile_home_tab.dart';
+import '../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
 import '../shared/uri_configs.dart';
 
 class MobileNavigatorUriConfigMatchResult<T extends UriConfig> extends Equatable {
@@ -36,9 +35,9 @@ class MobileNavigatorUriConfigMatchResult<T extends UriConfig> extends Equatable
 sealed class MobileNavigatorUriConfigParser<T extends UriConfig> {
   IList<AppRoute> getRequiredRootRoutes();
 
-  IList<AppRoute> getRequiredHomeTabRoutes();
+  IList<AppRoute> getRequiredActiveHomeTabRoutes();
 
-  MobileHomeTab getHomeTab();
+  MobileHomeTab? getRequiredActiveHomeTab();
 }
 
 abstract class _BaseMobileNavigatorUriConfigParser<T extends UriConfig> {
@@ -88,7 +87,7 @@ class ShoppingListOverviewUriConfigParser
     required IList<AppRoute> activeHomeTabActiveRoutes,
     required MobileHomeTab activeHomeTab,
   }) {
-    if (activeHomeTab != getHomeTab()) {
+    if (activeHomeTab != getRequiredActiveHomeTab()) {
       return null;
     }
 
@@ -103,7 +102,7 @@ class ShoppingListOverviewUriConfigParser
       return null;
     }
 
-    final requiredHomeTabRoutes = getRequiredHomeTabRoutes();
+    final requiredHomeTabRoutes = getRequiredActiveHomeTabRoutes();
 
     final matchedHomeTabRouteCount = getMatchedRequiredRouteCount(
       activeRoutes: activeHomeTabActiveRoutes,
@@ -134,7 +133,7 @@ class ShoppingListOverviewUriConfigParser
   }
 
   @override
-  IList<AppRoute> getRequiredHomeTabRoutes() {
+  IList<AppRoute> getRequiredActiveHomeTabRoutes() {
     return IList<AppRoute>([
       MobileShoppingListOverviewRoute(
         id: _uuidGenerator.generateUuid(),
@@ -143,7 +142,7 @@ class ShoppingListOverviewUriConfigParser
   }
 
   @override
-  MobileHomeTab getHomeTab() {
+  MobileHomeTab getRequiredActiveHomeTab() {
     return MobileHomeTab.overview;
   }
 }
@@ -161,17 +160,8 @@ class ShoppingListItemAdditionUriConfigParser
     required IList<AppRoute> activeRootRoutes,
     required IList<AppRoute> activeHomeTabActiveRoutes,
     required MobileHomeTab activeHomeTab,
-    required ShoppingListItemAdditionFlowStateRef shoppingListItemAdditionFlowStateRef,
   }) {
-    switch (shoppingListItemAdditionFlowStateRef) {
-      case IdleShoppingListItemAdditionFlowStateRef():
-        return null;
-
-      case OngoingShoppingListItemAdditionFlowStateRef():
-        break;
-    }
-
-    if (activeHomeTab != getHomeTab()) {
+    if (activeHomeTab != getRequiredActiveHomeTab()) {
       return null;
     }
 
@@ -186,7 +176,7 @@ class ShoppingListItemAdditionUriConfigParser
       return null;
     }
 
-    final requiredHomeTabRoutes = getRequiredHomeTabRoutes();
+    final requiredHomeTabRoutes = getRequiredActiveHomeTabRoutes();
 
     final matchedHomeTabRouteCount = getMatchedRequiredRouteCount(
       activeRoutes: activeHomeTabActiveRoutes,
@@ -203,7 +193,7 @@ class ShoppingListItemAdditionUriConfigParser
       uriConfig: uriConfig,
       matchedRequiredRootRouteCount: matchedRootRouteCount,
       matchedRequiredHomeTabRouteCount: matchedHomeTabRouteCount,
-      matchedRequiredFlowStateCount: 1,
+      matchedRequiredFlowStateCount: 0,
     );
   }
 
@@ -217,7 +207,7 @@ class ShoppingListItemAdditionUriConfigParser
   }
 
   @override
-  IList<AppRoute> getRequiredHomeTabRoutes() {
+  IList<AppRoute> getRequiredActiveHomeTabRoutes() {
     return IList<AppRoute>([
       MobileShoppingListItemAdditionRoute(
         id: _uuidGenerator.generateUuid(),
@@ -226,7 +216,7 @@ class ShoppingListItemAdditionUriConfigParser
   }
 
   @override
-  MobileHomeTab getHomeTab() {
+  MobileHomeTab getRequiredActiveHomeTab() {
     return MobileHomeTab.addition;
   }
 }

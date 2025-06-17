@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
+import '../../../../interface_adapters/presentation/navigation/shared/app_routes.dart';
 import 'navigator_page.dart';
 
 class AppNavigatorObserver extends NavigatorObserver {

@@ -4,18 +4,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_route_transition.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
+import '../../../../interface_adapters/presentation/navigation/mobile/mobile_route_transition.dart';
+import '../../../../interface_adapters/presentation/navigation/shared/app_routes.dart';
 import '../shared/navigator_page.dart';
 
-class DesktopRouteTransitionDelegate extends TransitionDelegate<dynamic> {
-  const DesktopRouteTransitionDelegate({
+class MobileRouteTransitionDelegate extends TransitionDelegate<dynamic> {
+  const MobileRouteTransitionDelegate({
     required this.routes,
     required this.routeToTransition,
   });
 
   final IList<AppRoute> routes;
-  final IMap<AppRoute, DesktopRouteTransition> routeToTransition;
+  final IMap<AppRoute, MobileRouteTransition> routeToTransition;
 
   @override
   Iterable<RouteTransitionRecord> resolve({
@@ -48,7 +48,7 @@ class DesktopRouteTransitionDelegate extends TransitionDelegate<dynamic> {
 
         if (routeTransitionRecord.isWaitingForEnteringDecision) {
           final shouldBeMarkedForAdd =
-              routeTransition is DesktopAdditionRouteTransition &&
+              routeTransition is MobileAdditionRouteTransition &&
               !routeTransition.displayTransition;
 
           if (!locationToExitingPageRoute.containsKey(routeTransitionRecord) &&
@@ -70,8 +70,7 @@ class DesktopRouteTransitionDelegate extends TransitionDelegate<dynamic> {
           );
 
           final shouldBeMarkedForComplete =
-              routeTransition is DesktopRemovalRouteTransition &&
-              !routeTransition.displayTransition;
+              routeTransition is MobileRemovalRouteTransition && !routeTransition.displayTransition;
 
           if (isLast && !hasPagelessRouteTransitionRecord && !shouldBeMarkedForComplete) {
             exitingRouteTransitionRecord.markForPop(

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 
-import '../../../../../../core/interface_adapters/presentation/base_view_presenter.dart';
+import '../../../../../../core/interface_adapters/presentation/base_presenter.dart';
 import '../../../../application/refs/flow_state_refs/shopping_list_overview_flow_state_ref.dart';
 import '../../../../application/use_cases/read_shopping_list_overview_flow_state.dart';
 import '../../../../application/use_cases/start_shopping_list_item_addition.dart';
@@ -13,7 +13,7 @@ import '../interfaces/shopping_list_overview_screen_state_presenters.dart';
 import '../views/shopping_list_overview_screen_views.dart';
 
 class ShoppingListOverviewScreenLoadedStatePresenterImpl
-    extends BaseViewPresenter<ShoppingListOverviewScreenLoadedView>
+    extends BasePresenter<ShoppingListOverviewScreenLoadedView>
     implements ShoppingListOverviewScreenLoadedStatePresenter {
   ShoppingListOverviewScreenLoadedStatePresenterImpl({
     required ShoppingListItemPresenterFactory shoppingListItemPresenterFactory,

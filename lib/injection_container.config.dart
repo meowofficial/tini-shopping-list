@@ -21,19 +21,21 @@ import 'app/application/use_cases/read_app_initialization_flow_state.dart'
     as _i116;
 import 'app/application/use_cases/watch_app_initialization_flow_state.dart'
     as _i440;
-import 'app/interface_adapters/presentation/navigation/desktop/desktop_navigator.dart'
-    as _i760;
 import 'app/interface_adapters/presentation/navigation/desktop/desktop_navigator_presenter.dart'
     as _i208;
 import 'app/interface_adapters/presentation/navigation/desktop/desktop_navigator_uri_config_parser_locator.dart'
     as _i287;
-import 'app/interface_adapters/presentation/navigation/mobile/mobile_navigator.dart'
-    as _i252;
+import 'app/interface_adapters/presentation/navigation/mobile/mobile_navigator_presenter.dart'
+    as _i153;
 import 'app/interface_adapters/presentation/navigation/mobile/mobile_navigator_uri_config_parser_locator.dart'
     as _i573;
 import 'app/interface_adapters/presentation/navigation/shared/uri_config_holder.dart'
     as _i78;
 import 'core/common/uuid/uuid_generator.dart' as _i540;
+import 'core/interface_adapters/presentation/navigation/desktop/desktop_navigator.dart'
+    as _i31;
+import 'core/interface_adapters/presentation/navigation/mobile/mobile_navigator.dart'
+    as _i482;
 import 'features/shopping_list/application/mappers/shopping_list_item_addition_flow_state_ref_mapper.dart'
     as _i794;
 import 'features/shopping_list/application/mappers/shopping_list_item_editing_flow_state_ref_mapper.dart'
@@ -100,10 +102,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1011.ShoppingListItemTitleValidator>(
       () => const _i1011.ShoppingListItemTitleValidatorImpl(),
     );
-    gh.lazySingleton<_i760.DesktopNavigator>(
-      () => _i760.DesktopNavigatorImpl(),
-      dispose: (i) => i.dispose(),
-    );
+    gh.lazySingleton<_i482.MobileNavigator>(() => _i482.MobileNavigatorImpl());
     gh.lazySingleton<_i127.ShoppingListItemPresenterFactory>(
       () => const _i61.ShoppingListItemPresenterFactoryImpl(),
     );
@@ -118,6 +117,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i1019.ShoppingListFlowStore>(
       () => _i1019.ShoppingListFlowStoreImpl(),
+    );
+    gh.lazySingleton<_i31.DesktopNavigator>(
+      () => _i31.DesktopNavigatorImpl(),
+      dispose: (i) => i.dispose(),
     );
     gh.lazySingleton<_i573.MobileNavigatorUriConfigParserLocator>(
       () => _i573.MobileNavigatorUriConfigParserLocatorImpl(),
@@ -172,7 +175,6 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i794.ShoppingListItemAdditionFlowStateRefMapper>(),
       ),
     );
-    gh.lazySingleton<_i252.MobileNavigator>(() => _i252.MobileNavigatorImpl());
     gh.lazySingleton<_i820.UpdateNewShoppingListDraftItemTitle>(
       () => _i820.UpdateNewShoppingListDraftItemTitleImpl(
         shoppingListItemTitleValidator:
@@ -249,6 +251,26 @@ extension GetItInjectableX on _i174.GetIt {
         shoppingListFlowStore: gh<_i1019.ShoppingListFlowStore>(),
       ),
     );
+    gh.lazySingleton<_i153.MobileNavigatorPresenter>(
+      () => _i153.MobileNavigatorPresenterImpl(
+        mobileNavigator: gh<_i482.MobileNavigator>(),
+        mobileNavigatorUriConfigParserLocator:
+            gh<_i573.MobileNavigatorUriConfigParserLocator>(),
+        uriConfigHolder: gh<_i78.UriConfigHolder>(),
+        uuidGenerator: gh<_i540.UuidGenerator>(),
+        cancelShoppingListItemAddition:
+            gh<_i625.CancelShoppingListItemAddition>(),
+        readAppInitializationFlowState:
+            gh<_i116.ReadAppInitializationFlowState>(),
+        readShoppingListItemAdditionFlowState:
+            gh<_i208.ReadShoppingListItemAdditionFlowState>(),
+        startShoppingListItemAddition:
+            gh<_i323.StartShoppingListItemAddition>(),
+        watchAppInitializationFlowState:
+            gh<_i440.WatchAppInitializationFlowState>(),
+      ),
+      dispose: (i) => i.dispose(),
+    );
     gh.lazySingleton<_i614.LoadShoppingListItems>(
       () => _i614.LoadShoppingListItemsImpl(
         shoppingListFlowStore: gh<_i1019.ShoppingListFlowStore>(),
@@ -268,7 +290,7 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i208.DesktopNavigatorPresenter>(
       () => _i208.DesktopNavigatorPresenterImpl(
-        navigator: gh<_i760.DesktopNavigator>(),
+        navigator: gh<_i31.DesktopNavigator>(),
         navigatorUriConfigParserLocator:
             gh<_i287.DesktopNavigatorUriConfigParserLocator>(),
         uriConfigHolder: gh<_i78.UriConfigHolder>(),

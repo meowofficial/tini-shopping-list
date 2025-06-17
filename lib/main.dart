@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart' hide RootWidget;
 import 'package:flutter/material.dart' hide RootWidget;
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'app/interface_adapters/presentation/app/desktop_app_presenter.dart';
 import 'injection_container.dart';
-import 'root_widget.dart';
+import 'root_routers.dart';
 
 void main() {
+  usePathUrlStrategy();
   configureDependencies();
   runApp(const AppWidget());
 }
@@ -78,7 +80,7 @@ class _AppWidgetState extends State<AppWidget> {
           ),
         );
       },
-      home: const RootWidget(),
+      home: const RootRouter(),
     );
   }
 }

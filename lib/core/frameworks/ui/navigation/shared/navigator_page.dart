@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
+import '../../../../interface_adapters/presentation/navigation/shared/app_routes.dart';
 
 class AppNavigatorPage<T> extends CupertinoPage<T> {
   AppNavigatorPage({

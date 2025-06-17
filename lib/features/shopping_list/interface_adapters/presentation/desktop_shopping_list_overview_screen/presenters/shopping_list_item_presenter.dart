@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import '../../../../../../core/interface_adapters/presentation/base_view_presenter.dart';
+import '../../../../../../core/interface_adapters/presentation/base_presenter.dart';
 import '../../../../application/refs/entity_refs/shopping_list_item_ref.dart';
 import '../../../../application/use_cases/toggle_shopping_list_item_check.dart';
 import '../../../../domain/entities/shopping_list_item.dart';
 import '../interfaces/shopping_list_item_presenter.dart';
 import '../views/shopping_list_item_view.dart';
 
-class ShoppingListItemPresenterImpl extends BaseViewPresenter<ShoppingListItemView>
+class ShoppingListItemPresenterImpl extends BasePresenter<ShoppingListItemView>
     implements ShoppingListItemPresenter {
   ShoppingListItemPresenterImpl({
     required ShoppingListItemRef shoppingListItemRef,

@@ -2,13 +2,13 @@ import 'package:equatable/equatable.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../../core/common/stream/state_streamable.dart';
-import '../../../../../core/common/stream/with_previous_stream.dart';
-import '../../../../../core/common/typedefs/value_with_previous.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/mobile/mobile_route_transition.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/shared/base_navigator.dart';
-import '../../../../../features/home/interface_adapters/presentation/mobile_home_tab.dart';
+import '../../../../common/stream/state_streamable.dart';
+import '../../../../common/stream/with_previous_stream.dart';
+import '../../../../common/typedefs/value_with_previous.dart';
+import '../shared/app_routes.dart';
+import '../shared/base_navigator.dart';
+import 'mobile_home_tab.dart';
+import 'mobile_route_transition.dart';
 
 abstract interface class MobileNavigator implements StateStreamable<MobileNavigatorState> {
   bool get initialized;
@@ -17,14 +17,12 @@ abstract interface class MobileNavigator implements StateStreamable<MobileNaviga
 
   void initialize({
     required MobileNavigatorStackState rootStackState,
-    required IMap<MobileHomeTab, MobileNavigatorStackState> homeTabStackStateMap,
-    required MobileHomeTab? activeHomeTab,
+    required MobileHomeNavigationState? homeNavigationState,
   });
 
   void updateWith({
     MobileNavigatorStackState Function()? rootStackState,
-    IMap<MobileHomeTab, MobileNavigatorStackState> Function()? homeTabStackStateMap,
-    MobileHomeTab? Function()? activeHomeTab,
+    MobileHomeNavigationState? Function()? homeNavigationState,
   });
 
   void dispose();
@@ -40,13 +38,11 @@ class MobileNavigatorImpl extends BaseNavigator<MobileNavigatorState> implements
   @override
   void initialize({
     required MobileNavigatorStackState rootStackState,
-    required IMap<MobileHomeTab, MobileNavigatorStackState> homeTabStackStateMap,
-    required MobileHomeTab? activeHomeTab,
+    required MobileHomeNavigationState? homeNavigationState,
   }) {
     final updatedState = MobileNavigatorState(
       rootStackState: rootStackState,
-      homeTabStackStateMap: homeTabStackStateMap,
-      activeHomeTab: activeHomeTab,
+      homeNavigationState: homeNavigationState,
     );
 
     initializeState(updatedState);
@@ -57,13 +53,11 @@ class MobileNavigatorImpl extends BaseNavigator<MobileNavigatorState> implements
   @override
   void updateWith({
     MobileNavigatorStackState Function()? rootStackState,
-    IMap<MobileHomeTab, MobileNavigatorStackState> Function()? homeTabStackStateMap,
-    MobileHomeTab? Function()? activeHomeTab,
+    MobileHomeNavigationState? Function()? homeNavigationState,
   }) {
     final updatedState = state.copyWith(
       rootStackState: rootStackState,
-      homeTabStackStateMap: homeTabStackStateMap,
-      activeHomeTab: activeHomeTab,
+      homeNavigationState: homeNavigationState,
     );
 
     emit(updatedState);
@@ -101,34 +95,57 @@ class MobileNavigatorStackState extends Equatable {
 class MobileNavigatorState extends Equatable {
   const MobileNavigatorState({
     required this.rootStackState,
-    required this.homeTabStackStateMap,
-    required this.activeHomeTab,
+    required this.homeNavigationState,
   });
 
   final MobileNavigatorStackState rootStackState;
-  final IMap<MobileHomeTab, MobileNavigatorStackState> homeTabStackStateMap;
-  final MobileHomeTab? activeHomeTab;
+  final MobileHomeNavigationState? homeNavigationState;
 
   @override
   List<Object?> get props {
     return [
       rootStackState,
-      homeTabStackStateMap,
-      activeHomeTab,
+      homeNavigationState,
     ];
   }
 
   MobileNavigatorState copyWith({
     MobileNavigatorStackState Function()? rootStackState,
-    IMap<MobileHomeTab, MobileNavigatorStackState> Function()? homeTabStackStateMap,
-    MobileHomeTab? Function()? activeHomeTab,
+    MobileHomeNavigationState? Function()? homeNavigationState,
   }) {
     return MobileNavigatorState(
       rootStackState: rootStackState == null ? this.rootStackState : rootStackState(),
-      homeTabStackStateMap: homeTabStackStateMap == null
-          ? this.homeTabStackStateMap
-          : homeTabStackStateMap(),
-      activeHomeTab: activeHomeTab == null ? this.activeHomeTab : activeHomeTab(),
+      homeNavigationState: homeNavigationState == null
+          ? this.homeNavigationState
+          : homeNavigationState(),
+    );
+  }
+}
+
+class MobileHomeNavigationState extends Equatable {
+  const MobileHomeNavigationState({
+    required this.tabStackStateMap,
+    required this.activeTab,
+  });
+
+  final IMap<MobileHomeTab, MobileNavigatorStackState> tabStackStateMap;
+  final MobileHomeTab activeTab;
+
+  @override
+  List<Object?> get props {
+    return [
+      tabStackStateMap,
+      activeTab,
+    ];
+  }
+
+  MobileHomeNavigationState copyWith({
+    IMap<MobileHomeTab, MobileNavigatorStackState> Function()? tabStackStateMap,
+    MobileHomeTab Function()? activeTab,
+  }) {
+    return MobileHomeNavigationState(
+      tabStackStateMap: tabStackStateMap == null ? this.tabStackStateMap : tabStackStateMap(),
+      activeTab: activeTab == null ? this.activeTab : activeTab(),
     );
   }
 }

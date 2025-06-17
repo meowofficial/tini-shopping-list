@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../../../../../../core/interface_adapters/presentation/base_view_presenter.dart';
+import '../../../../../../core/interface_adapters/presentation/base_presenter.dart';
 import '../../../../application/refs/flow_state_refs/shopping_list_item_addition_flow_state_ref.dart';
 import '../../../../application/use_cases/cancel_shopping_list_item_addition.dart';
 import '../../../../application/use_cases/complete_shopping_list_item_addition.dart';
@@ -12,7 +12,7 @@ import '../interfaces/shopping_list_item_addition_screen_presenter.dart';
 import '../views/shopping_list_item_addition_screen_view.dart';
 
 class ShoppingListItemAdditionScreenPresenterImpl
-    extends BaseViewPresenter<ShoppingListItemAdditionScreenView>
+    extends BasePresenter<ShoppingListItemAdditionScreenView>
     implements ShoppingListItemAdditionScreenPresenter {
   ShoppingListItemAdditionScreenPresenterImpl({
     required CancelShoppingListItemAddition cancelShoppingListItemAddition,

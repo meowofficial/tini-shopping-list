@@ -8,8 +8,9 @@ import '../../../../../core/common/stream/state_streamable.dart';
 import '../../../../../core/common/stream/with_previous_stream.dart';
 import '../../../../../core/common/typedefs/value_with_previous.dart';
 import '../../../../../core/common/uuid/uuid_generator.dart';
+import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_navigator.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_route_transition.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
+import '../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
 import '../../../../../features/shopping_list/application/refs/flow_state_refs/shopping_list_item_addition_flow_state_ref.dart';
 import '../../../../../features/shopping_list/application/use_cases/cancel_shopping_list_item_addition.dart';
 import '../../../../../features/shopping_list/application/use_cases/read_shopping_list_item_addition_flow_state.dart';
@@ -18,10 +19,8 @@ import '../../../../../features/shopping_list/application/use_cases/watch_shoppi
 import '../../../../application/refs/flow_state_refs/app_initialization_flow_state_ref.dart';
 import '../../../../application/use_cases/read_app_initialization_flow_state.dart';
 import '../../../../application/use_cases/watch_app_initialization_flow_state.dart';
-import '../shared/app_routes.dart';
 import '../shared/uri_config_holder.dart';
 import '../shared/uri_configs.dart';
-import 'desktop_navigator.dart';
 import 'desktop_navigator_delegates/shopping_list_item_addition_flow_navigator_delegates.dart';
 import 'desktop_navigator_observers.dart';
 import 'desktop_navigator_uri_config_parser_locator.dart';
@@ -143,9 +142,7 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
     }
   }
 
-  void _onNavigatorStateChanged(
-    ValueWithPrevious<DesktopNavigatorState> valueWithPrevious,
-  ) {
+  void _onNavigatorStateChanged(ValueWithPrevious<DesktopNavigatorState> valueWithPrevious) {
     final (currentState, previousState) = valueWithPrevious;
 
     for (final observer in _navigatorObservers) {

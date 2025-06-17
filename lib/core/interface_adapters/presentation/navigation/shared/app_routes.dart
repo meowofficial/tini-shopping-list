@@ -1,6 +1,12 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../../core/interface_adapters/presentation/navigation/shared/app_route.dart';
+abstract interface class AppRoute {
+  String get id;
+
+  AppRoute copyWith({
+    String Function()? id,
+  });
+}
 
 class SplashRoute extends Equatable implements AppRoute {
   const SplashRoute({
