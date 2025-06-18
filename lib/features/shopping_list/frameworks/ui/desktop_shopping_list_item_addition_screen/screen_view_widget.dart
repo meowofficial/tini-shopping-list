@@ -21,6 +21,7 @@ class DesktopShoppingListItemAdditionScreenViewWidget extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xfff2f2f7),
       navigationBar: CupertinoNavigationBar(
+        transitionBetweenRoutes: false,
         backgroundColor: Colors.white,
         brightness: Brightness.light,
         automaticallyImplyLeading: false,

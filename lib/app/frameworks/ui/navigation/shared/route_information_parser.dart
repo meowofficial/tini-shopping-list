@@ -21,7 +21,7 @@ class AppRouteInformationParser extends RouteInformationParser<UriConfig> {
 
   @override
   // ignore: avoid_renaming_method_parameters
-  RouteInformation? restoreRouteInformation(UriConfig uriConfig) {
+  RouteInformation restoreRouteInformation(UriConfig uriConfig) {
     final parser = _uriConfigParserLocator.getParserByUriConfig(uriConfig);
     final uri = parser.toUri(uriConfig);
     return RouteInformation(uri: uri);

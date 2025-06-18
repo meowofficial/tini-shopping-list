@@ -31,6 +31,8 @@ import 'app/interface_adapters/presentation/navigation/mobile/mobile_navigator_u
     as _i573;
 import 'app/interface_adapters/presentation/navigation/shared/uri_config_holder.dart'
     as _i78;
+import 'app/interface_adapters/presentation/navigation/shared/uri_config_parser_locator.dart'
+    as _i831;
 import 'core/common/uuid/uuid_generator.dart' as _i540;
 import 'core/interface_adapters/presentation/navigation/desktop/desktop_navigator.dart'
     as _i31;
@@ -146,6 +148,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i879.AppInitializationFlowStateRefMapper>(
       () => const _i879.AppInitializationFlowStateRefMapperImpl(),
+    );
+    gh.lazySingleton<_i831.UriConfigParserLocator>(
+      () => _i831.UriConfigParserLocatorImpl(),
     );
     gh.lazySingleton<_i794.ShoppingListItemAdditionFlowStateRefMapper>(
       () => const _i794.ShoppingListItemAdditionFlowStateRefMapperImpl(),

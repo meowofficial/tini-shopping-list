@@ -33,6 +33,23 @@ class ShoppingListItemAdditionScreenOpeningNavigatorDelegate
       return;
     }
 
+    final shoppingListItemAdditionRouteExists = _navigator.state.routes
+        .where((it) {
+          switch (_navigator.state.routeToTransition[it]) {
+            case null:
+            case DesktopAdditionRouteTransition():
+              return true;
+
+            case DesktopRemovalRouteTransition():
+              return false;
+          }
+        })
+        .any((it) => it is DesktopShoppingListItemAdditionRoute);
+
+    if (shoppingListItemAdditionRouteExists) {
+      return;
+    }
+
     final route = DesktopShoppingListItemAdditionRoute(
       id: _uuidGenerator.generateUuid(),
     );
@@ -70,9 +87,20 @@ class ShoppingListItemAdditionScreenClosingNavigatorDelegate
       return;
     }
 
-    final route = _navigator.state.routes.firstWhereOrNull(
-      (it) => it is DesktopShoppingListItemAdditionRoute,
-    );
+    final route = _navigator.state.routes
+        .where((it) {
+          switch (_navigator.state.routeToTransition[it]) {
+            case null:
+            case DesktopAdditionRouteTransition():
+              return true;
+
+            case DesktopRemovalRouteTransition():
+              return false;
+          }
+        })
+        .firstWhereOrNull(
+          (it) => it is DesktopShoppingListItemAdditionRoute,
+        );
 
     if (route == null) {
       return;
