@@ -4,8 +4,8 @@ import 'package:meta/meta.dart';
 
 import 'view_streamable.dart';
 
-abstract class BasePresenter<V> implements AsyncViewStreamable<V> {
-  BasePresenter();
+abstract class BaseViewStreamablePresenter<V> implements AsyncViewStreamable<V> {
+  BaseViewStreamablePresenter();
 
   var _initialized = false;
   late V _view;

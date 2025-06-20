@@ -10,6 +10,7 @@ import '../../../../../../core/interface_adapters/presentation/navigation/phone/
 import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_home_tab.dart';
 import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_route_transition.dart';
 import '../../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
+import '../../../../../../features/shopping_list/frameworks/ui/phone_shopping_list_item_addition_screen/screen.dart';
 
 class PhoneHomeAdditionTabRouterDelegate extends RouterDelegate<UriConfig>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<UriConfig> {
@@ -29,11 +30,7 @@ class PhoneHomeAdditionTabRouterDelegate extends RouterDelegate<UriConfig>
 
     switch (route) {
       case PhoneShoppingListItemAdditionRoute():
-        // widget = PhoneShoppingListItemAdditionScreen(
-        //   key: Key(route.id),
-        // );
-        widget = Container(
-          color: Colors.red,
+        widget = PhoneShoppingListItemAdditionScreen(
           key: Key(route.id),
         );
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide ViewBuilder;
 
 import '../../../../../core/frameworks/ui/utils/view_stream_builder.dart';
-import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_item_presenter.dart';
-import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/views/shopping_list_item_view.dart';
+import '../../../interface_adapters/presentation/phone_shopping_list_overview_screen/interfaces/shopping_list_item_presenter.dart';
+import '../../../interface_adapters/presentation/phone_shopping_list_overview_screen/views/shopping_list_item_view.dart';
 
 class ShoppingListItemViewWidget extends StatelessWidget {
   const ShoppingListItemViewWidget({

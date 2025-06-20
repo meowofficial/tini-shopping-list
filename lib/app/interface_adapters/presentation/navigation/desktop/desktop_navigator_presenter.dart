@@ -12,9 +12,9 @@ import '../../../../../core/interface_adapters/presentation/navigation/desktop/d
 import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_route_transition.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
 import '../../../../../features/shopping_list/application/refs/flow_state_refs/shopping_list_item_addition_flow_state_ref.dart';
-import '../../../../../features/shopping_list/application/use_cases/cancel_shopping_list_item_addition.dart';
 import '../../../../../features/shopping_list/application/use_cases/read_shopping_list_item_addition_flow_state.dart';
 import '../../../../../features/shopping_list/application/use_cases/start_shopping_list_item_addition.dart';
+import '../../../../../features/shopping_list/application/use_cases/stop_shopping_list_item_addition.dart';
 import '../../../../../features/shopping_list/application/use_cases/watch_shopping_list_item_addition_flow_state.dart';
 import '../../../../application/refs/flow_state_refs/app_initialization_flow_state_ref.dart';
 import '../../../../application/use_cases/read_app_initialization_flow_state.dart';
@@ -52,7 +52,7 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
     required DesktopNavigatorUriConfigParserLocator navigatorUriConfigParserLocator,
     required UriConfigHolder uriConfigHolder,
     required UuidGenerator uuidGenerator,
-    required CancelShoppingListItemAddition cancelShoppingListItemAddition,
+    required StopShoppingListItemAddition stopShoppingListItemAddition,
     required ReadAppInitializationFlowState readAppInitializationFlowState,
     required ReadShoppingListItemAdditionFlowState readShoppingListItemAdditionFlowState,
     required StartShoppingListItemAddition startShoppingListItemAddition,
@@ -62,15 +62,15 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
        _navigatorUriConfigParserLocator = navigatorUriConfigParserLocator,
        _uriConfigHolder = uriConfigHolder,
        _uuidGenerator = uuidGenerator,
-       _cancelShoppingListItemAddition = cancelShoppingListItemAddition,
+       _stopShoppingListItemAddition = stopShoppingListItemAddition,
        _readAppInitializationFlowState = readAppInitializationFlowState,
        _readShoppingListItemAdditionFlowState = readShoppingListItemAdditionFlowState,
        _startShoppingListItemAddition = startShoppingListItemAddition,
        _watchAppInitializationFlowState = watchAppInitializationFlowState,
        _watchShoppingListItemAdditionFlowState = watchShoppingListItemAdditionFlowState {
     _navigatorObservers = IList<DesktopNavigatorObserver>([
-      ShoppingListItemAdditionCancellationNavigatorObserver(
-        cancelShoppingListItemAddition: _cancelShoppingListItemAddition,
+      ShoppingListItemAdditionStopNavigatorObserver(
+        stopShoppingListItemAddition: _stopShoppingListItemAddition,
         readShoppingListItemAdditionFlowState: _readShoppingListItemAdditionFlowState,
       ),
     ]);
@@ -106,7 +106,7 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
   final UriConfigHolder _uriConfigHolder;
   final UuidGenerator _uuidGenerator;
 
-  final CancelShoppingListItemAddition _cancelShoppingListItemAddition;
+  final StopShoppingListItemAddition _stopShoppingListItemAddition;
   final ReadAppInitializationFlowState _readAppInitializationFlowState;
   final ReadShoppingListItemAdditionFlowState _readShoppingListItemAdditionFlowState;
   final StartShoppingListItemAddition _startShoppingListItemAddition;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ScreenBodyLoadingViewWidget extends StatelessWidget {
-  const ScreenBodyLoadingViewWidget({
+class ScreenBodyLoadingStateViewWidget extends StatelessWidget {
+  const ScreenBodyLoadingStateViewWidget({
     super.key,
   });
 
@@ -9,8 +9,8 @@ class ScreenBodyLoadingViewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: SizedBox(
-        width: 50,
-        height: 50,
+        width: 30,
+        height: 30,
         child: CircularProgressIndicator(),
       ),
     );

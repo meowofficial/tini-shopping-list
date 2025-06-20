@@ -5,12 +5,11 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import '../../../../../../core/interface_adapters/presentation/base_view_streamable_presenter.dart';
 import '../../../../application/refs/flow_state_refs/shopping_list_overview_flow_state_ref.dart';
 import '../../../../application/use_cases/read_shopping_list_overview_flow_state.dart';
-import '../../../../application/use_cases/start_shopping_list_item_addition.dart';
 import '../../../../application/use_cases/watch_shopping_list_overview_flow_state.dart';
 import '../interfaces/shopping_list_item_presenter.dart';
 import '../interfaces/shopping_list_item_presenter_factory.dart';
 import '../interfaces/shopping_list_overview_screen_state_presenters.dart';
-import '../views/shopping_list_overview_screen_views.dart';
+import '../views/shopping_list_overview_screen_state_views.dart';
 
 class ShoppingListOverviewScreenLoadedStatePresenterImpl
     extends BaseViewStreamablePresenter<ShoppingListOverviewScreenLoadedStateView>
@@ -18,11 +17,9 @@ class ShoppingListOverviewScreenLoadedStatePresenterImpl
   ShoppingListOverviewScreenLoadedStatePresenterImpl({
     required ShoppingListItemPresenterFactory shoppingListItemPresenterFactory,
     required ReadShoppingListOverviewFlowState readShoppingListOverviewFlowState,
-    required StartShoppingListItemAddition startShoppingListItemAddition,
     required WatchShoppingListOverviewFlowState watchShoppingListOverviewFlowState,
   }) : _shoppingListItemPresenterFactory = shoppingListItemPresenterFactory,
        _readShoppingListOverviewFlowState = readShoppingListOverviewFlowState,
-       _startShoppingListItemAddition = startShoppingListItemAddition,
        _watchShoppingListOverviewFlowState = watchShoppingListOverviewFlowState {
     _shoppingListItemViewPresenterStreamController =
         StreamController<IList<ShoppingListItemPresenter>>.broadcast();
@@ -50,7 +47,6 @@ class ShoppingListOverviewScreenLoadedStatePresenterImpl
   final ShoppingListItemPresenterFactory _shoppingListItemPresenterFactory;
 
   final ReadShoppingListOverviewFlowState _readShoppingListOverviewFlowState;
-  final StartShoppingListItemAddition _startShoppingListItemAddition;
   final WatchShoppingListOverviewFlowState _watchShoppingListOverviewFlowState;
 
   late final StreamController<IList<ShoppingListItemPresenter>>
@@ -107,11 +103,6 @@ class ShoppingListOverviewScreenLoadedStatePresenterImpl
 
     _shoppingListItemViewPresenters = updatedPresenters.lock;
     _shoppingListItemViewPresenterStreamController.add(_shoppingListItemViewPresenters);
-  }
-
-  @override
-  void onShoppingListItemAdditionButtonPressed() {
-    _startShoppingListItemAddition();
   }
 
   @override

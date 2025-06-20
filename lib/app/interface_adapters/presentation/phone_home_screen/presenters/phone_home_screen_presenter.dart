@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import '../../../../../../core/interface_adapters/presentation/base_presenter.dart';
+import '../../../../../../core/interface_adapters/presentation/base_view_streamable_presenter.dart';
 import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_home_tab.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/phone/phone_navigator.dart';
 import '../interfaces/phone_home_screen_presenter.dart';
 import '../views/phone_home_screen_view.dart';
 
-class PhoneHomeScreenPresenterImpl extends BasePresenter<PhoneHomeScreenView>
+class PhoneHomeScreenPresenterImpl extends BaseViewStreamablePresenter<PhoneHomeScreenView>
     implements PhoneHomeScreenPresenter {
   PhoneHomeScreenPresenterImpl({
     required PhoneNavigator navigator,

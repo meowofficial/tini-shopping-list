@@ -3,25 +3,22 @@ import 'dart:async';
 import '../../../../../../core/interface_adapters/presentation/base_view_streamable_presenter.dart';
 import '../../../../application/refs/flow_state_refs/shopping_list_item_addition_flow_state_ref.dart';
 import '../../../../application/use_cases/read_shopping_list_item_addition_flow_state.dart';
-import '../../../../application/use_cases/stop_shopping_list_item_addition.dart';
 import '../../../../application/use_cases/submit_new_shopping_list_item_draft.dart';
 import '../../../../application/use_cases/update_new_shopping_list_draft_item_title.dart';
 import '../../../../application/use_cases/watch_shopping_list_item_addition_flow_state.dart';
 import '../../../../domain/entities/new_shopping_list_draft_item.dart';
-import '../interfaces/shopping_list_item_addition_screen_presenter.dart';
-import '../views/shopping_list_item_addition_screen_view.dart';
+import '../interfaces/shopping_list_item_addition_screen_state_presenters.dart';
+import '../views/shopping_list_item_addition_screen_state_views.dart';
 
-class ShoppingListItemAdditionScreenPresenterImpl
-    extends BaseViewStreamablePresenter<ShoppingListItemAdditionScreenView>
-    implements ShoppingListItemAdditionScreenPresenter {
-  ShoppingListItemAdditionScreenPresenterImpl({
+class ShoppingListItemAdditionScreenReadyStatePresenterImpl
+    extends BaseViewStreamablePresenter<ShoppingListItemAdditionScreenReadyStateView>
+    implements ShoppingListItemAdditionScreenReadyStatePresenter {
+  ShoppingListItemAdditionScreenReadyStatePresenterImpl({
     required SubmitNewShoppingListItemDraft submitNewShoppingListItemDraft,
-    required StopShoppingListItemAddition stopShoppingListItemAddition,
     required ReadShoppingListItemAdditionFlowState readShoppingListItemAdditionFlowState,
     required UpdateNewShoppingListDraftItemTitle updateNewShoppingListDraftItemTitle,
     required WatchShoppingListItemAdditionFlowState watchShoppingListItemAdditionFlowState,
   }) : _submitNewShoppingListItemDraft = submitNewShoppingListItemDraft,
-       _stopShoppingListItemAddition = stopShoppingListItemAddition,
        _readShoppingListItemAdditionFlowState = readShoppingListItemAdditionFlowState,
        _updateNewShoppingListDraftItemTitle = updateNewShoppingListDraftItemTitle,
        _watchShoppingListItemAdditionFlowState = watchShoppingListItemAdditionFlowState {
@@ -37,7 +34,7 @@ class ShoppingListItemAdditionScreenPresenterImpl
       newShoppingListDraftItemSnapshot: newShoppingListDraftItemRef.snapshot,
     );
 
-    final view = ShoppingListItemAdditionScreenView(
+    final view = ShoppingListItemAdditionScreenReadyStateView(
       shoppingListItemAdditionInputText: newShoppingListDraftItemRef.snapshot.title,
       submissionButtonEnabled: updatedSubmissionButtonEnabled,
     );
@@ -53,7 +50,6 @@ class ShoppingListItemAdditionScreenPresenterImpl
   }
 
   final SubmitNewShoppingListItemDraft _submitNewShoppingListItemDraft;
-  final StopShoppingListItemAddition _stopShoppingListItemAddition;
   final ReadShoppingListItemAdditionFlowState _readShoppingListItemAdditionFlowState;
   final UpdateNewShoppingListDraftItemTitle _updateNewShoppingListDraftItemTitle;
   final WatchShoppingListItemAdditionFlowState _watchShoppingListItemAdditionFlowState;
@@ -86,9 +82,10 @@ class ShoppingListItemAdditionScreenPresenterImpl
   }
 
   void _onShoppingListItemAdditionFlowStateChanged(ShoppingListItemAdditionFlowStateRef stateRef) {
-    if (!_completed && stateRef is! OngoingShoppingListItemAdditionFlowStateRef) {
-      _completed = true;
-    }
+    _completed = switch (stateRef) {
+      IdleShoppingListItemAdditionFlowStateRef() => true,
+      OngoingShoppingListItemAdditionFlowStateRef() => false,
+    };
   }
 
   @override
@@ -98,7 +95,6 @@ class ShoppingListItemAdditionScreenPresenterImpl
     }
 
     _submitNewShoppingListItemDraft();
-    _stopShoppingListItemAddition();
   }
 
   @override
@@ -110,15 +106,6 @@ class ShoppingListItemAdditionScreenPresenterImpl
     _updateNewShoppingListDraftItemTitle(
       updatedTitle: value,
     );
-  }
-
-  @override
-  void onBackButtonPressed() {
-    if (_completed) {
-      return;
-    }
-
-    _stopShoppingListItemAddition();
   }
 
   @override

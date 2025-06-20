@@ -25,8 +25,8 @@ class _DesktopShoppingListItemAdditionScreenState
     super.initState();
 
     _presenter = ShoppingListItemAdditionScreenPresenterImpl(
-      cancelShoppingListItemAddition: di(),
-      completeShoppingListItemAddition: di(),
+      submitNewShoppingListItemDraft: di(),
+      stopShoppingListItemAddition: di(),
       readShoppingListItemAdditionFlowState: di(),
       updateNewShoppingListDraftItemTitle: di(),
       watchShoppingListItemAdditionFlowState: di(),

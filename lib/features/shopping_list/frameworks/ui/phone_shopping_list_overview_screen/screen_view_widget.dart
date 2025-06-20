@@ -2,48 +2,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/frameworks/ui/ui_kit/navigation_bar_title_widget.dart';
-import '../../../../../injection_container.dart';
-import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_presenter.dart';
-import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_state_presenters.dart';
-import '../../../interface_adapters/presentation/desktop_shopping_list_overview_screen/presenters/shopping_list_overview_screen_presenter.dart';
+import '../../../interface_adapters/presentation/phone_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_presenter.dart';
+import '../../../interface_adapters/presentation/phone_shopping_list_overview_screen/interfaces/shopping_list_overview_screen_state_presenters.dart';
 import 'screen_body_loaded_state_view_widget.dart';
 import 'screen_body_loading_state_view_widget.dart';
 
-class DesktopShoppingListOverviewScreen extends StatefulWidget {
-  const DesktopShoppingListOverviewScreen({
+class PhoneShoppingListOverviewScreenViewWidget extends StatelessWidget {
+  const PhoneShoppingListOverviewScreenViewWidget({
+    required this.presenter,
     super.key,
   });
 
-  @override
-  State<DesktopShoppingListOverviewScreen> createState() =>
-      _DesktopShoppingListOverviewScreenState();
-}
-
-class _DesktopShoppingListOverviewScreenState extends State<DesktopShoppingListOverviewScreen> {
-  late final ShoppingListOverviewScreenPresenter _presenter;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _presenter = ShoppingListOverviewScreenPresenterImpl(
-      shoppingListOverviewScreenStatePresenterFactory: di(),
-      loadShoppingListItems: di(),
-      readShoppingListOverviewFlowState: di(),
-      watchShoppingListOverviewFlowState: di(),
-    );
-  }
-
-  @override
-  void dispose() {
-    _presenter.dispose();
-    super.dispose();
-  }
+  final ShoppingListOverviewScreenPresenter presenter;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: _presenter.updateStream,
+      stream: presenter.updateStream,
       builder: (context, _) {
         return CupertinoPageScaffold(
           resizeToAvoidBottomInset: false,
@@ -72,15 +47,15 @@ class _DesktopShoppingListOverviewScreenState extends State<DesktopShoppingListO
   Widget _buildScreenBody({
     required BuildContext context,
   }) {
-    final currentViewPresenter = _presenter.currentStatePresenter;
+    final currentStatePresenter = presenter.currentStatePresenter;
 
-    switch (currentViewPresenter) {
+    switch (currentStatePresenter) {
       case ShoppingListOverviewScreenLoadingStatePresenter():
         return const ScreenBodyLoadingStateViewWidget();
 
       case ShoppingListOverviewScreenLoadedStatePresenter():
         return ScreenBodyLoadedStateViewWidget(
-          presenter: currentViewPresenter,
+          presenter: currentStatePresenter,
         );
     }
   }

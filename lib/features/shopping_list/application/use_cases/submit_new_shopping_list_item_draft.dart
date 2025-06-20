@@ -2,24 +2,28 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../core/common/errors/unexpected_state_error.dart';
 import '../../domain/factories/shopping_list_item_factory.dart';
+import '../../domain/validation/shopping_list_item/validator.dart';
 import '../flow_states/shopping_list_item_addition_flow_state.dart';
 import '../flow_states/shopping_list_overview_flow_state.dart';
 import '../stores/shopping_list_flow_store.dart';
 
-abstract interface class CompleteShoppingListItemAddition {
+abstract interface class SubmitNewShoppingListItemDraft {
   void call();
 }
 
-@LazySingleton(as: CompleteShoppingListItemAddition)
-class CompleteShoppingListItemAdditionImpl implements CompleteShoppingListItemAddition {
-  const CompleteShoppingListItemAdditionImpl({
+@LazySingleton(as: SubmitNewShoppingListItemDraft)
+class SubmitNewShoppingListItemDraftImpl implements SubmitNewShoppingListItemDraft {
+  const SubmitNewShoppingListItemDraftImpl({
     required ShoppingListItemFactory shoppingListItemFactory,
     required ShoppingListFlowStore shoppingListFlowStore,
+    required ShoppingListItemTitleValidator shoppingListItemTitleValidator,
   }) : _shoppingListItemFactory = shoppingListItemFactory,
-       _shoppingListFlowStore = shoppingListFlowStore;
+       _shoppingListFlowStore = shoppingListFlowStore,
+       _shoppingListItemTitleValidator = shoppingListItemTitleValidator;
 
   final ShoppingListItemFactory _shoppingListItemFactory;
   final ShoppingListFlowStore _shoppingListFlowStore;
+  final ShoppingListItemTitleValidator _shoppingListItemTitleValidator;
 
   @override
   void call() {
@@ -55,13 +59,19 @@ class CompleteShoppingListItemAdditionImpl implements CompleteShoppingListItemAd
       shoppingListItems: updatedShoppingListItems,
     );
 
-    newShoppingListDraftItem.dispose();
+    const updatedTitle = '';
 
-    const updatedShoppingListItemAdditionFlowState = IdleShoppingListItemAdditionFlowState();
+    final updatedTitleValidationError = _shoppingListItemTitleValidator.validate(
+      title: updatedTitle,
+    );
+
+    shoppingListItemAdditionFlowState.newShoppingListDraftItem.changeTitle(
+      title: updatedTitle,
+      titleValidationError: updatedTitleValidationError,
+    );
 
     _shoppingListFlowStore.updateWith(
       shoppingListOverviewFlowState: () => updatedShoppingListOverviewFlowState,
-      shoppingListItemAdditionFlowState: () => updatedShoppingListItemAdditionFlowState,
     );
   }
 }

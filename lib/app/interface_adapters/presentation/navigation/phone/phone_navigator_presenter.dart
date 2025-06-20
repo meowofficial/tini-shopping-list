@@ -12,9 +12,9 @@ import '../../../../../core/interface_adapters/presentation/navigation/phone/pho
 import '../../../../../core/interface_adapters/presentation/navigation/phone/phone_navigator.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/phone/phone_route_transition.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
-import '../../../../../features/shopping_list/application/use_cases/cancel_shopping_list_item_addition.dart';
 import '../../../../../features/shopping_list/application/use_cases/read_shopping_list_item_addition_flow_state.dart';
 import '../../../../../features/shopping_list/application/use_cases/start_shopping_list_item_addition.dart';
+import '../../../../../features/shopping_list/application/use_cases/stop_shopping_list_item_addition.dart';
 import '../../../../application/refs/flow_state_refs/app_initialization_flow_state_ref.dart';
 import '../../../../application/use_cases/read_app_initialization_flow_state.dart';
 import '../../../../application/use_cases/watch_app_initialization_flow_state.dart';
@@ -65,7 +65,7 @@ class PhoneNavigatorPresenterImpl implements PhoneNavigatorPresenter {
     required PhoneNavigatorUriConfigParserLocator phoneNavigatorUriConfigParserLocator,
     required UriConfigHolder uriConfigHolder,
     required UuidGenerator uuidGenerator,
-    required CancelShoppingListItemAddition cancelShoppingListItemAddition,
+    required StopShoppingListItemAddition stopShoppingListItemAddition,
     required ReadAppInitializationFlowState readAppInitializationFlowState,
     required ReadShoppingListItemAdditionFlowState readShoppingListItemAdditionFlowState,
     required StartShoppingListItemAddition startShoppingListItemAddition,
@@ -74,14 +74,14 @@ class PhoneNavigatorPresenterImpl implements PhoneNavigatorPresenter {
        _phoneNavigatorUriConfigParserLocator = phoneNavigatorUriConfigParserLocator,
        _uriConfigHolder = uriConfigHolder,
        _uuidGenerator = uuidGenerator,
-       _cancelShoppingListItemAddition = cancelShoppingListItemAddition,
+       _stopShoppingListItemAddition = stopShoppingListItemAddition,
        _readAppInitializationFlowState = readAppInitializationFlowState,
        _readShoppingListItemAdditionFlowState = readShoppingListItemAdditionFlowState,
        _startShoppingListItemAddition = startShoppingListItemAddition,
        _watchAppInitializationFlowState = watchAppInitializationFlowState {
     _navigatorObservers = IList<PhoneNavigatorObserver>([
       ShoppingListItemAdditionCancellationNavigatorObserver(
-        cancelShoppingListItemAddition: _cancelShoppingListItemAddition,
+        stopShoppingListItemAddition: _stopShoppingListItemAddition,
         readShoppingListItemAdditionFlowState: _readShoppingListItemAdditionFlowState,
       ),
       ShoppingListItemAdditionStartNavigatorObserver(
@@ -106,7 +106,7 @@ class PhoneNavigatorPresenterImpl implements PhoneNavigatorPresenter {
   final UriConfigHolder _uriConfigHolder;
   final UuidGenerator _uuidGenerator;
 
-  final CancelShoppingListItemAddition _cancelShoppingListItemAddition;
+  final StopShoppingListItemAddition _stopShoppingListItemAddition;
   final ReadAppInitializationFlowState _readAppInitializationFlowState;
   final ReadShoppingListItemAdditionFlowState _readShoppingListItemAdditionFlowState;
   final StartShoppingListItemAddition _startShoppingListItemAddition;

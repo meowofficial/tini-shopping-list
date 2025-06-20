@@ -2,6 +2,7 @@ import 'dart:async';
 
 import '../../../../../../core/common/stream/with_previous_stream.dart';
 import '../../../../../../core/common/typedefs/value_with_previous.dart';
+import '../../../../../../core/interface_adapters/presentation/base_update_streamable_presenter.dart';
 import '../../../../application/refs/flow_state_refs/shopping_list_overview_flow_state_ref.dart';
 import '../../../../application/use_cases/load_shopping_list_items.dart';
 import '../../../../application/use_cases/read_shopping_list_overview_flow_state.dart';
@@ -10,7 +11,8 @@ import '../interfaces/shopping_list_overview_screen_presenter.dart';
 import '../interfaces/shopping_list_overview_screen_state_presenter_factory.dart';
 import '../interfaces/shopping_list_overview_screen_state_presenters.dart';
 
-class ShoppingListOverviewScreenPresenterImpl implements ShoppingListOverviewScreenPresenter {
+class ShoppingListOverviewScreenPresenterImpl extends BaseUpdateStreamablePresenter
+    implements ShoppingListOverviewScreenPresenter {
   ShoppingListOverviewScreenPresenterImpl({
     required ShoppingListOverviewScreenStatePresenterFactory
     shoppingListOverviewScreenStatePresenterFactory,
@@ -22,8 +24,6 @@ class ShoppingListOverviewScreenPresenterImpl implements ShoppingListOverviewScr
        _loadShoppingListItems = loadShoppingListItems,
        _readShoppingListOverviewFlowState = readShoppingListOverviewFlowState,
        _watchShoppingListOverviewFlowState = watchShoppingListOverviewFlowState {
-    _updateStreamController = StreamController<void>.broadcast();
-
     final shoppingListOverviewFlowStateRef = _readShoppingListOverviewFlowState();
 
     _currentViewPresenter = _shoppingListOverviewScreenStatePresenterFactory.create(
@@ -50,15 +50,11 @@ class ShoppingListOverviewScreenPresenterImpl implements ShoppingListOverviewScr
 
   late ShoppingListOverviewScreenStatePresenter _currentViewPresenter;
 
-  late final StreamController<void> _updateStreamController;
   late final StreamSubscription<ValueWithPrevious<ShoppingListOverviewFlowStateRef>>
   _shoppingListOverviewFlowStateStreamSubscription;
 
   @override
   ShoppingListOverviewScreenStatePresenter get currentStatePresenter => _currentViewPresenter;
-
-  @override
-  Stream<void> get updateStream => _updateStreamController.stream;
 
   void _onShoppingListOverviewFlowStateChanged(
     ValueWithPrevious<ShoppingListOverviewFlowStateRef> valueWithPrevious,
@@ -79,12 +75,12 @@ class ShoppingListOverviewScreenPresenterImpl implements ShoppingListOverviewScr
       shoppingListOverviewFlowStateRef: currentShoppingListOverviewFlowStateRef,
     );
 
-    _updateStreamController.add(null);
+    emitUpdate();
   }
 
   @override
   void dispose() {
     _shoppingListOverviewFlowStateStreamSubscription.cancel();
-    _updateStreamController.close();
+    super.dispose();
   }
 }

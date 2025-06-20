@@ -4,13 +4,13 @@ import '../../../../core/common/errors/unexpected_state_error.dart';
 import '../flow_states/shopping_list_item_addition_flow_state.dart';
 import '../stores/shopping_list_flow_store.dart';
 
-abstract interface class CancelShoppingListItemAddition {
+abstract interface class StopShoppingListItemAddition {
   void call();
 }
 
-@LazySingleton(as: CancelShoppingListItemAddition)
-class CancelShoppingListItemAdditionImpl implements CancelShoppingListItemAddition {
-  const CancelShoppingListItemAdditionImpl({
+@LazySingleton(as: StopShoppingListItemAddition)
+class StopShoppingListItemAdditionImpl implements StopShoppingListItemAddition {
+  const StopShoppingListItemAdditionImpl({
     required ShoppingListFlowStore shoppingListFlowStore,
   }) : _shoppingListFlowStore = shoppingListFlowStore;
 
