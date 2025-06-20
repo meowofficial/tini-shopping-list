@@ -3,16 +3,16 @@ import 'package:flutter/material.dart' hide RootWidget;
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'app/frameworks/ui/navigation/desktop/desktop_router_delegate.dart';
-import 'app/frameworks/ui/navigation/mobile/root/mobile_root_router_delegate.dart';
+import 'app/frameworks/ui/navigation/phone/root/phone_root_router_delegate.dart';
 import 'app/frameworks/ui/navigation/shared/route_information_parser.dart';
 import 'app/interface_adapters/presentation/app/desktop_app_presenter.dart';
 import 'app/interface_adapters/presentation/navigation/desktop/desktop_navigator_presenter.dart';
-import 'app/interface_adapters/presentation/navigation/mobile/mobile_navigator_presenter.dart';
+import 'app/interface_adapters/presentation/navigation/phone/phone_navigator_presenter.dart';
 import 'app/interface_adapters/presentation/navigation/shared/uri_config_holder.dart';
 import 'app/interface_adapters/presentation/navigation/shared/uri_configs.dart';
 import 'core/frameworks/ui/utils/responsive.dart';
 import 'core/interface_adapters/presentation/navigation/desktop/desktop_navigator.dart';
-import 'core/interface_adapters/presentation/navigation/mobile/mobile_navigator.dart';
+import 'core/interface_adapters/presentation/navigation/phone/phone_navigator.dart';
 import 'injection_container.dart';
 
 void main() {
@@ -65,11 +65,11 @@ class _AppWidgetState extends State<AppWidget> {
 
     switch (screenLayout) {
       case ScreenLayout.phone:
-        final routerDelegate = MobileRootRouterDelegate(
+        final routerDelegate = PhoneRootRouterDelegate(
           navigatorPresenter: di(),
         );
 
-        return MobileRouterConfig(
+        return PhoneRouterConfig(
           routerDelegate: routerDelegate,
           routeInformationParser: routeInformationParser,
           routeInformationProvider: routeInformationProvider,
@@ -97,9 +97,9 @@ class _AppWidgetState extends State<AppWidget> {
         di.resetLazySingleton<DesktopNavigatorPresenter>();
         routerConfig.routerDelegate.dispose();
 
-      case MobileRouterConfig():
-        di.resetLazySingleton<MobileNavigator>();
-        di.resetLazySingleton<MobileNavigatorPresenter>();
+      case PhoneRouterConfig():
+        di.resetLazySingleton<PhoneNavigator>();
+        di.resetLazySingleton<PhoneNavigatorPresenter>();
         routerConfig.routerDelegate.dispose();
     }
   }
@@ -255,9 +255,9 @@ class DesktopRouterConfig extends AppRouterConfig {
   ScreenLayout get screenLayout => ScreenLayout.desktop;
 }
 
-class MobileRouterConfig extends AppRouterConfig {
-  const MobileRouterConfig({
-    required MobileRootRouterDelegate routerDelegate,
+class PhoneRouterConfig extends AppRouterConfig {
+  const PhoneRouterConfig({
+    required PhoneRootRouterDelegate routerDelegate,
     required super.routeInformationParser,
     required super.routeInformationProvider,
     required super.backButtonDispatcher,
@@ -266,7 +266,7 @@ class MobileRouterConfig extends AppRouterConfig {
        );
 
   @override
-  MobileRootRouterDelegate get routerDelegate => super.routerDelegate as MobileRootRouterDelegate;
+  PhoneRootRouterDelegate get routerDelegate => super.routerDelegate as PhoneRootRouterDelegate;
 
   @override
   ScreenLayout get screenLayout => ScreenLayout.phone;

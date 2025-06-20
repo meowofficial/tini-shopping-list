@@ -1,4 +1,0 @@
-enum MobileHomeTab {
-  overview,
-  addition,
-}
