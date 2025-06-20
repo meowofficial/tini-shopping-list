@@ -187,8 +187,18 @@ class MobileNavigatorPresenterImpl implements MobileNavigatorPresenter {
       for (var i = processedExistingRouteCount; i < existingRoutes.length; i++) {
         final existingRoute = existingRoutes[i];
 
+        final existingRouteActive = switch (existingRouteToTransition[existingRoute]) {
+          null || MobileAdditionRouteTransition() => true,
+          MobileRemovalRouteTransition() => false,
+        };
+
+        if (!existingRouteActive) {
+          updatedRoutes.add(existingRoute);
+          processedExistingRouteCount++;
+          continue;
+        }
+
         if (requiredRoute.copyWith(id: () => existingRoute.id) == existingRoute) {
-          updatedRouteToTransition[existingRoute] = additionRouteTransition;
           foundDesiredRouteCount++;
           updatedRoutes.add(existingRoute);
           processedExistingRouteCount++;
@@ -203,6 +213,13 @@ class MobileNavigatorPresenterImpl implements MobileNavigatorPresenter {
       if (processedExistingRouteCount == existingRoutes.length) {
         break;
       }
+    }
+
+    for (var i = processedExistingRouteCount; i < existingRoutes.length; i++) {
+      final existingRoute = existingRoutes[i];
+      updatedRouteToTransition[existingRoute] = removalRouteTransition;
+      updatedRoutes.add(existingRoute);
+      processedExistingRouteCount++;
     }
 
     for (var i = foundDesiredRouteCount; i < requiredRoutes.length; i++) {

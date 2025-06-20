@@ -229,8 +229,18 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
       for (var i = processedExistingRouteCount; i < existingRoutes.length; i++) {
         final existingRoute = existingRoutes[i];
 
+        final existingRouteActive = switch (updatedRouteToTransition[existingRoute]) {
+          null || DesktopAdditionRouteTransition() => true,
+          DesktopRemovalRouteTransition() => false,
+        };
+
+        if (!existingRouteActive) {
+          updatedRoutes.add(existingRoute);
+          processedExistingRouteCount++;
+          continue;
+        }
+
         if (requiredRoute.copyWith(id: () => existingRoute.id) == existingRoute) {
-          updatedRouteToTransition[existingRoute] = additionRouteTransition;
           foundRequiredRouteCount++;
           updatedRoutes.add(existingRoute);
           processedExistingRouteCount++;
@@ -245,6 +255,13 @@ class DesktopNavigatorPresenterImpl implements DesktopNavigatorPresenter {
       if (processedExistingRouteCount == existingRoutes.length) {
         break;
       }
+    }
+
+    for (var i = processedExistingRouteCount; i < existingRoutes.length; i++) {
+      final existingRoute = existingRoutes[i];
+      updatedRouteToTransition[existingRoute] = removalRouteTransition;
+      updatedRoutes.add(existingRoute);
+      processedExistingRouteCount++;
     }
 
     for (var i = foundRequiredRouteCount; i < requiredRoutes.length; i++) {
