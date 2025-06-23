@@ -18,6 +18,7 @@ class ShoppingListItemAdditionScreenStatePresenterFactoryImpl
   }) {
     switch (shoppingListItemAdditionFlowStateRef) {
       case IdleShoppingListItemAdditionFlowStateRef():
+      case SuspendedShoppingListItemAdditionFlowStateRef():
         return ShoppingListItemAdditionScreenIdleStatePresenterImpl();
 
       case OngoingShoppingListItemAdditionFlowStateRef():

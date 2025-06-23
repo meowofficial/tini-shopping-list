@@ -66,6 +66,8 @@ import 'features/shopping_list/application/use_cases/stop_shopping_list_item_add
     as _i273;
 import 'features/shopping_list/application/use_cases/submit_new_shopping_list_item_draft.dart'
     as _i1020;
+import 'features/shopping_list/application/use_cases/suspend_shopping_list_item_addition.dart'
+    as _i518;
 import 'features/shopping_list/application/use_cases/toggle_shopping_list_item_check.dart'
     as _i277;
 import 'features/shopping_list/application/use_cases/update_existing_shopping_list_draft_item_title.dart'
@@ -209,6 +211,11 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           const _i459.ShoppingListItemAdditionScreenStatePresenterFactoryImpl(),
     );
+    gh.lazySingleton<_i518.SuspendShoppingListItemAddition>(
+      () => _i518.SuspendShoppingListItemAdditionImpl(
+        shoppingListFlowStore: gh<_i1019.ShoppingListFlowStore>(),
+      ),
+    );
     gh.lazySingleton<_i1022.CompleteShoppingListItemEditing>(
       () => _i1022.CompleteShoppingListItemEditingImpl(
         shoppingListFlowStore: gh<_i1019.ShoppingListFlowStore>(),
@@ -304,7 +311,8 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i930.PhoneNavigatorUriConfigParserLocator>(),
         uriConfigHolder: gh<_i78.UriConfigHolder>(),
         uuidGenerator: gh<_i540.UuidGenerator>(),
-        stopShoppingListItemAddition: gh<_i273.StopShoppingListItemAddition>(),
+        suspendShoppingListItemAddition:
+            gh<_i518.SuspendShoppingListItemAddition>(),
         readAppInitializationFlowState:
             gh<_i116.ReadAppInitializationFlowState>(),
         readShoppingListItemAdditionFlowState:

@@ -3,7 +3,7 @@ import '../../../../../core/interface_adapters/presentation/navigation/phone/pho
 import '../../../../../features/shopping_list/application/refs/flow_state_refs/shopping_list_item_addition_flow_state_ref.dart';
 import '../../../../../features/shopping_list/application/use_cases/read_shopping_list_item_addition_flow_state.dart';
 import '../../../../../features/shopping_list/application/use_cases/start_shopping_list_item_addition.dart';
-import '../../../../../features/shopping_list/application/use_cases/stop_shopping_list_item_addition.dart';
+import '../../../../../features/shopping_list/application/use_cases/suspend_shopping_list_item_addition.dart';
 
 sealed class PhoneNavigatorObserver {
   void handleStateChange({
@@ -12,15 +12,15 @@ sealed class PhoneNavigatorObserver {
   });
 }
 
-class ShoppingListItemAdditionCancellationNavigatorObserver implements PhoneNavigatorObserver {
-  const ShoppingListItemAdditionCancellationNavigatorObserver({
+class ShoppingListItemAdditionSuspensionNavigatorObserver implements PhoneNavigatorObserver {
+  const ShoppingListItemAdditionSuspensionNavigatorObserver({
     required ReadShoppingListItemAdditionFlowState readShoppingListItemAdditionFlowState,
-    required StopShoppingListItemAddition stopShoppingListItemAddition,
+    required SuspendShoppingListItemAddition suspendShoppingListItemAddition,
   }) : _readShoppingListItemAdditionFlowState = readShoppingListItemAdditionFlowState,
-       _stopShoppingListItemAddition = stopShoppingListItemAddition;
+       _suspendShoppingListItemAddition = suspendShoppingListItemAddition;
 
   final ReadShoppingListItemAdditionFlowState _readShoppingListItemAdditionFlowState;
-  final StopShoppingListItemAddition _stopShoppingListItemAddition;
+  final SuspendShoppingListItemAddition _suspendShoppingListItemAddition;
 
   @override
   void handleStateChange({
@@ -41,7 +41,7 @@ class ShoppingListItemAdditionCancellationNavigatorObserver implements PhoneNavi
       return;
     }
 
-    _stopShoppingListItemAddition();
+    _suspendShoppingListItemAddition();
   }
 }
 
@@ -62,8 +62,13 @@ class ShoppingListItemAdditionStartNavigatorObserver implements PhoneNavigatorOb
   }) {
     final shoppingListItemAdditionFlowStateRef = _readShoppingListItemAdditionFlowState();
 
-    if (shoppingListItemAdditionFlowStateRef is! IdleShoppingListItemAdditionFlowStateRef) {
-      return;
+    switch (shoppingListItemAdditionFlowStateRef) {
+      case IdleShoppingListItemAdditionFlowStateRef():
+      case SuspendedShoppingListItemAdditionFlowStateRef():
+        break;
+
+      case OngoingShoppingListItemAdditionFlowStateRef():
+        return;
     }
 
     final currentActiveHomeTab = currentState.homeNavigationState?.activeTab;

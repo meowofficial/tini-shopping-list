@@ -23,21 +23,30 @@ class StartShoppingListItemAdditionImpl implements StartShoppingListItemAddition
 
   @override
   void call() {
-    if (_shoppingListFlowStore.state.shoppingListItemAdditionFlowState
-        is! IdleShoppingListItemAdditionFlowState) {
-      throwStateError();
+    final shoppingListItemAdditionFlowState =
+        _shoppingListFlowStore.state.shoppingListItemAdditionFlowState;
+
+    final NewShoppingListDraftItem newShoppingListDraftItem;
+
+    switch (shoppingListItemAdditionFlowState) {
+      case IdleShoppingListItemAdditionFlowState():
+        const title = '';
+
+        final titleValidationError = _shoppingListItemTitleValidator.validate(
+          title: title,
+        );
+
+        newShoppingListDraftItem = NewShoppingListDraftItem(
+          title: title,
+          titleValidationError: titleValidationError,
+        );
+
+      case OngoingShoppingListItemAdditionFlowState():
+        throwStateError();
+
+      case SuspendedShoppingListItemAdditionFlowState():
+        newShoppingListDraftItem = shoppingListItemAdditionFlowState.newShoppingListDraftItem;
     }
-
-    const title = '';
-
-    final titleValidationError = _shoppingListItemTitleValidator.validate(
-      title: title,
-    );
-
-    final newShoppingListDraftItem = NewShoppingListDraftItem(
-      title: title,
-      titleValidationError: titleValidationError,
-    );
 
     final updatedShoppingListItemAdditionFlowState = OngoingShoppingListItemAdditionFlowState(
       newShoppingListDraftItem: newShoppingListDraftItem,

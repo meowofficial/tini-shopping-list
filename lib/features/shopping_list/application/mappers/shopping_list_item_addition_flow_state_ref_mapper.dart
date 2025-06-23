@@ -27,6 +27,15 @@ class ShoppingListItemAdditionFlowStateRefMapperImpl
         return OngoingShoppingListItemAdditionFlowStateRef(
           newShoppingListDraftItemRef: newShoppingListDraftItemRef,
         );
+
+      case SuspendedShoppingListItemAdditionFlowState():
+        final newShoppingListDraftItemRef = NewShoppingListDraftItemRefImpl(
+          entity: flowState.newShoppingListDraftItem,
+        );
+
+        return SuspendedShoppingListItemAdditionFlowStateRef(
+          newShoppingListDraftItemRef: newShoppingListDraftItemRef,
+        );
     }
   }
 }

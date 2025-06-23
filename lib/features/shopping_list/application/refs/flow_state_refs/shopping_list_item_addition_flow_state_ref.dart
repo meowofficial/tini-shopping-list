@@ -27,3 +27,19 @@ class OngoingShoppingListItemAdditionFlowStateRef extends Equatable
     ];
   }
 }
+
+class SuspendedShoppingListItemAdditionFlowStateRef extends Equatable
+    implements ShoppingListItemAdditionFlowStateRef {
+  const SuspendedShoppingListItemAdditionFlowStateRef({
+    required this.newShoppingListDraftItemRef,
+  });
+
+  final NewShoppingListDraftItemRef newShoppingListDraftItemRef;
+
+  @override
+  List<Object?> get props {
+    return [
+      newShoppingListDraftItemRef,
+    ];
+  }
+}

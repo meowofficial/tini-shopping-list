@@ -123,6 +123,7 @@ class ShoppingListItemAdditionUriConfigParser
   }) {
     switch (shoppingListItemAdditionFlowStateRef) {
       case IdleShoppingListItemAdditionFlowStateRef():
+      case SuspendedShoppingListItemAdditionFlowStateRef():
         return null;
 
       case OngoingShoppingListItemAdditionFlowStateRef():

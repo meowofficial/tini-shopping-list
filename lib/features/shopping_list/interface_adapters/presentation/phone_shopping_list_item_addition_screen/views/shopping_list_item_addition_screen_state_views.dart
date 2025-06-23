@@ -42,3 +42,11 @@ class ShoppingListItemAdditionScreenReadyStateView extends Equatable
     );
   }
 }
+
+class ShoppingListItemAdditionScreenSuspendedStateView extends Equatable
+    implements ShoppingListItemAdditionScreenStateView {
+  const ShoppingListItemAdditionScreenSuspendedStateView();
+
+  @override
+  List<Object?> get props => [];
+}
