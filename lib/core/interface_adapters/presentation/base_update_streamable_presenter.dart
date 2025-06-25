@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
+import '../../common/disposable.dart';
 import 'update_streamable.dart';
 
-abstract class BaseUpdateStreamablePresenter implements AsyncUpdateStreamable {
+abstract class BaseUpdateStreamablePresenter implements AsyncUpdateStreamable, Disposable {
   BaseUpdateStreamablePresenter();
 
   @protected
@@ -19,6 +20,7 @@ abstract class BaseUpdateStreamablePresenter implements AsyncUpdateStreamable {
   }
 
   @mustCallSuper
+  @override
   void dispose() {
     updateStreamController.close();
   }

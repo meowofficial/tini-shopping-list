@@ -10,7 +10,7 @@ import '../../../../../../core/interface_adapters/presentation/navigation/phone/
 import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_home_tab.dart';
 import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_route_transition.dart';
 import '../../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
-import '../../../../../../features/shopping_list/frameworks/ui/phone_shopping_list_overview_screen/screen.dart';
+import '../../../../../../features/shopping_list/frameworks/ui/phone_shopping_list_overview_screen/screen/screen.dart';
 
 class PhoneHomeOverviewTabRouterDelegate extends RouterDelegate<UriConfig>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<UriConfig> {

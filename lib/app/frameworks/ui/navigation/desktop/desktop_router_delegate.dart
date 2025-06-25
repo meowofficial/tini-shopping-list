@@ -11,7 +11,7 @@ import '../../../../../core/interface_adapters/presentation/navigation/desktop/d
 import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_route_transition.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
 import '../../../../../features/shopping_list/frameworks/ui/desktop_shopping_list_item_addition_screen/screen.dart';
-import '../../../../../features/shopping_list/frameworks/ui/desktop_shopping_list_overview_screen/screen.dart';
+import '../../../../../features/shopping_list/frameworks/ui/desktop_shopping_list_overview_screen/screen/screen.dart';
 import '../../../../interface_adapters/presentation/navigation/desktop/desktop_navigator_presenter.dart';
 import '../../../../interface_adapters/presentation/navigation/shared/uri_configs.dart';
 

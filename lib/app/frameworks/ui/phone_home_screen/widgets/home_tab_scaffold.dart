@@ -8,12 +8,14 @@ class HomeTabScaffold extends StatefulWidget {
     required this.activeTab,
     required this.onTabPressed,
     required this.tabBuilder,
+    required this.tabLabelBuilder,
     super.key,
   });
 
   final PhoneHomeTab activeTab;
   final void Function(PhoneHomeTab) onTabPressed;
   final Widget Function(BuildContext, PhoneHomeTab) tabBuilder;
+  final String Function(PhoneHomeTab) tabLabelBuilder;
 
   @override
   State<HomeTabScaffold> createState() => _HomeTabScaffoldState();
@@ -77,20 +79,20 @@ class _HomeTabScaffoldState extends State<HomeTabScaffold> {
       controller: _tabController,
       tabBar: CupertinoTabBar(
         items: [
-          const BottomNavigationBarItem(
-            icon: Icon(
+          BottomNavigationBarItem(
+            icon: const Icon(
               CupertinoIcons.list_bullet,
               size: 28,
             ),
-            label: 'Обзор',
+            label: widget.tabLabelBuilder(PhoneHomeTab.overview),
           ),
 
-          const BottomNavigationBarItem(
-            icon: Icon(
+          BottomNavigationBarItem(
+            icon: const Icon(
               CupertinoIcons.plus_app,
               size: 28,
             ),
-            label: 'Добавление',
+            label: widget.tabLabelBuilder(PhoneHomeTab.addition),
           ),
         ],
         onTap: _onTabPressed,

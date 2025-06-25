@@ -2,13 +2,14 @@ import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/application/stores/base_store.dart';
+import '../../../../core/common/disposable.dart';
 import '../../../../core/common/stream/state_streamable.dart';
 import '../flow_states/shopping_list_item_addition_flow_state.dart';
 import '../flow_states/shopping_list_item_editing_flow_state.dart';
 import '../flow_states/shopping_list_overview_flow_state.dart';
 
 abstract interface class ShoppingListFlowStore
-    implements StateStreamable<ShoppingListFlowStoreState> {
+    implements StateStreamable<ShoppingListFlowStoreState>, Disposable {
   void initialize({
     required ShoppingListOverviewFlowState shoppingListOverviewFlowState,
     required ShoppingListItemAdditionFlowState shoppingListItemAdditionFlowState,
@@ -20,8 +21,6 @@ abstract interface class ShoppingListFlowStore
     ShoppingListItemAdditionFlowState Function()? shoppingListItemAdditionFlowState,
     ShoppingListItemEditingFlowState Function()? shoppingListItemEditingFlowState,
   });
-
-  void dispose();
 }
 
 @LazySingleton(as: ShoppingListFlowStore)

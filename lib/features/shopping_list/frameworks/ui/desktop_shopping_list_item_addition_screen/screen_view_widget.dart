@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../../core/frameworks/ui/ui_kit/back_button.dart';
 import '../../../../../core/frameworks/ui/ui_kit/navigation_bar_title_widget.dart';
 import '../../../../../core/frameworks/ui/utils/view_stream_builder.dart';
-import '../../../interface_adapters/presentation/desktop_shopping_list_item_addition_screen/interfaces/shopping_list_item_addition_screen_presenter.dart';
+import '../../../interface_adapters/presentation/desktop_shopping_list_item_addition_screen/screen/interfaces/shopping_list_item_addition_screen_presenter.dart';
 import 'widgets/shopping_list_item_title_text_field.dart';
 
 class DesktopShoppingListItemAdditionScreenViewWidget extends StatelessWidget {
@@ -26,10 +26,9 @@ class DesktopShoppingListItemAdditionScreenViewWidget extends StatelessWidget {
         brightness: Brightness.light,
         automaticallyImplyLeading: false,
         automaticallyImplyMiddle: false,
+        automaticBackgroundVisibility: false,
         padding: EdgeInsetsDirectional.zero,
-        middle: const NavigationBarTitleWidget(
-          title: 'Добавление элемента',
-        ),
+        middle: _buildTitle(),
         leading: AppBackButton(
           onPressed: presenter.onBackButtonPressed,
         ),
@@ -39,6 +38,18 @@ class DesktopShoppingListItemAdditionScreenViewWidget extends StatelessWidget {
           context: context,
         ),
       ),
+    );
+  }
+
+  Widget _buildTitle() {
+    return ConverterViewStreamBuilder(
+      viewStreamable: presenter,
+      converter: (view) => view.title,
+      builder: (context, title) {
+        return NavigationBarTitleWidget(
+          title: title,
+        );
+      },
     );
   }
 
@@ -68,13 +79,23 @@ class DesktopShoppingListItemAdditionScreenViewWidget extends StatelessWidget {
               const SizedBox(height: 20),
               ConverterViewStreamBuilder(
                 viewStreamable: presenter,
-                converter: (view) => view.submissionButtonEnabled,
-                builder: (context, submissionButtonEnabled) {
+                converter: (view) {
+                  return (
+                    submissionButtonEnabled: view.submissionButtonEnabled,
+                    submissionButtonTitle: view.submissionButtonTitle,
+                  );
+                },
+                builder: (context, state) {
+                  final (
+                    :submissionButtonEnabled,
+                    :submissionButtonTitle,
+                  ) = state;
+
                   return CupertinoButton.filled(
                     onPressed: submissionButtonEnabled
                         ? presenter.onShoppingListItemSubmissionButtonPressed
                         : null,
-                    child: const Text('Добавить'),
+                    child: Text(submissionButtonTitle),
                   );
                 },
               ),

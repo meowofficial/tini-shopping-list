@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
+import '../../common/disposable.dart';
 import 'view_streamable.dart';
 
-abstract class BaseViewStreamablePresenter<V> implements AsyncViewStreamable<V> {
+abstract class BaseViewStreamablePresenter<V> implements AsyncViewStreamable<V>, Disposable {
   BaseViewStreamablePresenter();
 
   var _initialized = false;
@@ -38,6 +39,7 @@ abstract class BaseViewStreamablePresenter<V> implements AsyncViewStreamable<V> 
   }
 
   @mustCallSuper
+  @override
   void dispose() {
     viewStreamController.close();
   }

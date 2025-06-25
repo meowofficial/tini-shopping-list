@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
+import '../../common/disposable.dart';
 import '../../common/stream/snapshot_streamable.dart';
 
-abstract class BaseEntity<S> implements SnapshotStreamable<S> {
+abstract class BaseEntity<S> implements SnapshotStreamable<S>, Disposable {
   BaseEntity();
 
   @protected
@@ -26,6 +27,7 @@ abstract class BaseEntity<S> implements SnapshotStreamable<S> {
   }
 
   @mustCallSuper
+  @override
   void dispose() {
     snapshotStreamController.close();
     syncSnapshotStreamController.close();

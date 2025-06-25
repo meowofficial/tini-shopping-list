@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
+import '../../common/disposable.dart';
 import '../../common/stream/state_streamable.dart';
 
-abstract class BaseStore<S> implements StateStreamable<S> {
+abstract class BaseStore<S> implements StateStreamable<S>, Disposable {
   BaseStore();
 
   var _initialized = false;
@@ -41,6 +42,7 @@ abstract class BaseStore<S> implements StateStreamable<S> {
   }
 
   @mustCallSuper
+  @override
   void dispose() {
     stateStreamController.close();
     syncStateStreamController.close();

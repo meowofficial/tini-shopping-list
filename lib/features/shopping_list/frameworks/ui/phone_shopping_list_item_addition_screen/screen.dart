@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../injection_container.dart';
-import '../../../interface_adapters/presentation/phone_shopping_list_item_addition_screen/interfaces/shopping_list_item_addition_screen_presenter.dart';
-import '../../../interface_adapters/presentation/phone_shopping_list_item_addition_screen/presenters/shopping_list_item_addition_screen_presenter.dart';
+import '../../../interface_adapters/presentation/phone_shopping_list_item_addition_screen/screen/interfaces/shopping_list_item_addition_screen_presenter.dart';
+import '../../../interface_adapters/presentation/phone_shopping_list_item_addition_screen/screen/presenters/shopping_list_item_addition_screen_presenter.dart';
 import 'screen_view_widget.dart';
 
 class PhoneShoppingListItemAdditionScreen extends StatefulWidget {

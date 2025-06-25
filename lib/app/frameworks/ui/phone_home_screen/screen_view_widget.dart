@@ -23,6 +23,12 @@ class PhoneHomeScreenViewWidget extends StatelessWidget {
         return HomeTabScaffold(
           activeTab: view.activeTab,
           onTabPressed: presenter.onTabPressed,
+          tabLabelBuilder: (tab) {
+            return switch (tab) {
+              PhoneHomeTab.overview => view.overviewTabLabel,
+              PhoneHomeTab.addition => view.additionTabLabel,
+            };
+          },
           tabBuilder: (context, tab) {
             switch (tab) {
               case PhoneHomeTab.overview:

@@ -22,7 +22,10 @@ class _PhoneHomeScreenState extends State<PhoneHomeScreen> {
     super.initState();
 
     _presenter = PhoneHomeScreenPresenterImpl(
+      translation: di(),
       navigator: di(),
+      readUiLocale: di(),
+      watchUiLocale: di(),
     );
   }
 

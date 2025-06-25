@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../../core/common/stream/disposable.dart';
+import '../../../../../core/common/disposable.dart';
 import '../../../../../core/common/stream/state_streamable.dart';
 import '../../../../../core/common/typedefs/value_with_previous.dart';
 import '../../../../../core/common/uuid/uuid_generator.dart';
