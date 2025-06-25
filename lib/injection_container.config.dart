@@ -21,14 +21,14 @@ import 'app/application/use_cases/read_app_initialization_flow_state.dart'
     as _i116;
 import 'app/application/use_cases/watch_app_initialization_flow_state.dart'
     as _i440;
-import 'app/interface_adapters/presentation/navigation/desktop/desktop_navigator_presenter.dart'
-    as _i208;
-import 'app/interface_adapters/presentation/navigation/desktop/desktop_navigator_uri_config_parser_locator.dart'
-    as _i287;
-import 'app/interface_adapters/presentation/navigation/phone/phone_navigator_presenter.dart'
-    as _i834;
-import 'app/interface_adapters/presentation/navigation/phone/phone_navigator_uri_config_parser_locator.dart'
-    as _i930;
+import 'app/interface_adapters/presentation/navigation/desktop/orchestrator/desktop_navigator_presenter.dart'
+    as _i572;
+import 'app/interface_adapters/presentation/navigation/desktop/orchestrator/desktop_navigator_uri_config_parser_locator.dart'
+    as _i392;
+import 'app/interface_adapters/presentation/navigation/phone/orchestrator/phone_navigation_orchestrator.dart'
+    as _i502;
+import 'app/interface_adapters/presentation/navigation/phone/orchestrator/phone_navigator_uri_config_parser_locator.dart'
+    as _i623;
 import 'app/interface_adapters/presentation/navigation/shared/uri_config_holder.dart'
     as _i78;
 import 'app/interface_adapters/presentation/navigation/shared/uri_config_parser_locator.dart'
@@ -162,6 +162,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<
       _i412.ShoppingListOverviewScreenLoadedStateViewTranslation
     >(() => _i412.ShoppingListOverviewScreenLoadedStateViewTranslationImpl());
+    gh.lazySingleton<_i623.PhoneNavigatorUriConfigParserLocator>(
+      () => _i623.PhoneNavigatorUriConfigParserLocatorImpl(),
+    );
     gh.lazySingleton<_i41.ShoppingListItemAdditionScreenStatePresenterFactory>(
       () =>
           const _i496.ShoppingListItemAdditionScreenStatePresenterFactoryImpl(),
@@ -171,9 +174,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i28.ShoppingListItemEditingFlowStateRefMapper>(
       () => const _i28.ShoppingListItemEditingFlowStateRefMapperImpl(),
-    );
-    gh.lazySingleton<_i287.DesktopNavigatorUriConfigParserLocator>(
-      () => _i287.DesktopNavigatorUriConfigParserLocatorImpl(),
     );
     gh.lazySingleton<_i1061.ShoppingListOverviewFlowStateRefMapper>(
       () => const _i1061.ShoppingListOverviewFlowStateRefMapperImpl(),
@@ -187,9 +187,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i540.UuidGenerator>(
       () => const _i540.UuidGeneratorImpl(),
-    );
-    gh.lazySingleton<_i930.PhoneNavigatorUriConfigParserLocator>(
-      () => _i930.PhoneNavigatorUriConfigParserLocatorImpl(),
     );
     gh.lazySingleton<
       _i925.ShoppingListOverviewScreenLoadedStateViewTranslation
@@ -236,6 +233,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i829.ShoppingListItemFactoryImpl(
         uuidGenerator: gh<_i540.UuidGenerator>(),
       ),
+    );
+    gh.lazySingleton<_i392.DesktopNavigatorUriConfigParserLocator>(
+      () => _i392.DesktopNavigatorUriConfigParserLocatorImpl(),
     );
     gh.lazySingleton<_i1042.ShoppingListItemAdditionScreenViewTranslation>(
       () => _i1042.ShoppingListItemAdditionScreenViewTranslationImpl(),
@@ -357,31 +357,11 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i1011.ShoppingListItemTitleValidator>(),
       ),
     );
-    gh.lazySingleton<_i834.PhoneNavigatorPresenter>(
-      () => _i834.PhoneNavigatorPresenterImpl(
-        phoneNavigator: gh<_i829.PhoneNavigator>(),
-        phoneNavigatorUriConfigParserLocator:
-            gh<_i930.PhoneNavigatorUriConfigParserLocator>(),
-        uriConfigHolder: gh<_i78.UriConfigHolder>(),
-        uuidGenerator: gh<_i540.UuidGenerator>(),
-        suspendShoppingListItemAddition:
-            gh<_i518.SuspendShoppingListItemAddition>(),
-        readAppInitializationFlowState:
-            gh<_i116.ReadAppInitializationFlowState>(),
-        readShoppingListItemAdditionFlowState:
-            gh<_i208.ReadShoppingListItemAdditionFlowState>(),
-        startShoppingListItemAddition:
-            gh<_i323.StartShoppingListItemAddition>(),
-        watchAppInitializationFlowState:
-            gh<_i440.WatchAppInitializationFlowState>(),
-      ),
-      dispose: (i) => i.dispose(),
-    );
-    gh.lazySingleton<_i208.DesktopNavigatorPresenter>(
-      () => _i208.DesktopNavigatorPresenterImpl(
+    gh.lazySingleton<_i572.DesktopNavigationOrchestrator>(
+      () => _i572.DesktopNavigationOrchestratorImpl(
         navigator: gh<_i31.DesktopNavigator>(),
         navigatorUriConfigParserLocator:
-            gh<_i287.DesktopNavigatorUriConfigParserLocator>(),
+            gh<_i392.DesktopNavigatorUriConfigParserLocator>(),
         uriConfigHolder: gh<_i78.UriConfigHolder>(),
         uuidGenerator: gh<_i540.UuidGenerator>(),
         stopShoppingListItemAddition: gh<_i273.StopShoppingListItemAddition>(),
@@ -395,6 +375,26 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i440.WatchAppInitializationFlowState>(),
         watchShoppingListItemAdditionFlowState:
             gh<_i342.WatchShoppingListItemAdditionFlowState>(),
+      ),
+      dispose: (i) => i.dispose(),
+    );
+    gh.lazySingleton<_i502.PhoneNavigationOrchestrator>(
+      () => _i502.PhoneNavigationOrchestratorImpl(
+        phoneNavigator: gh<_i829.PhoneNavigator>(),
+        phoneNavigatorUriConfigParserLocator:
+            gh<_i623.PhoneNavigatorUriConfigParserLocator>(),
+        uriConfigHolder: gh<_i78.UriConfigHolder>(),
+        uuidGenerator: gh<_i540.UuidGenerator>(),
+        suspendShoppingListItemAddition:
+            gh<_i518.SuspendShoppingListItemAddition>(),
+        readAppInitializationFlowState:
+            gh<_i116.ReadAppInitializationFlowState>(),
+        readShoppingListItemAdditionFlowState:
+            gh<_i208.ReadShoppingListItemAdditionFlowState>(),
+        startShoppingListItemAddition:
+            gh<_i323.StartShoppingListItemAddition>(),
+        watchAppInitializationFlowState:
+            gh<_i440.WatchAppInitializationFlowState>(),
       ),
       dispose: (i) => i.dispose(),
     );

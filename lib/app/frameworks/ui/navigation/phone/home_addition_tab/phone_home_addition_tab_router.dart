@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../injection_container.dart';
+import '../../../../../interface_adapters/presentation/navigation/phone/routers/interfaces/phone_home_addition_tab_router_presenter.dart';
+import '../../../../../interface_adapters/presentation/navigation/phone/routers/presenters/phone_home_addition_tab_router_presenter.dart';
 import 'phone_home_addition_tab_router_delegate.dart';
 
 class PhoneHomeAdditionTabRouter extends StatefulWidget {
@@ -13,20 +15,27 @@ class PhoneHomeAdditionTabRouter extends StatefulWidget {
 }
 
 class _PhoneHomeAdditionTabRouterState extends State<PhoneHomeAdditionTabRouter> {
+  late final PhoneHomeAdditionTabRouterPresenter _presenter;
   late final PhoneHomeAdditionTabRouterDelegate _routerDelegate;
 
   @override
   void initState() {
     super.initState();
 
+    _presenter = PhoneHomeAdditionTabRouterPresenterImpl(
+      navigator: di(),
+      navigationOrchestrator: di(),
+    );
+
     _routerDelegate = PhoneHomeAdditionTabRouterDelegate(
-      navigatorPresenter: di(),
+      presenter: _presenter,
     );
   }
 
   @override
   void dispose() {
     _routerDelegate.dispose();
+    _presenter.dispose();
     super.dispose();
   }
 

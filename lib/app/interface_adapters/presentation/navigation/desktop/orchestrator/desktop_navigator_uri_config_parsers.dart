@@ -2,11 +2,11 @@ import 'package:equatable/equatable.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:meta/meta.dart';
 
-import '../../../../../core/common/uuid/uuid_generator.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_app_routes.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
-import '../../../../../features/shopping_list/application/refs/flow_state_refs/shopping_list_item_addition_flow_state_ref.dart';
-import '../shared/uri_configs.dart';
+import '../../../../../../core/common/uuid/uuid_generator.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_app_routes.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
+import '../../../../../../features/shopping_list/application/refs/flow_state_refs/shopping_list_item_addition_flow_state_ref.dart';
+import '../../shared/uri_configs.dart';
 
 class DesktopNavigatorUriConfigMatchResult<T extends UriConfig> extends Equatable {
   const DesktopNavigatorUriConfigMatchResult({

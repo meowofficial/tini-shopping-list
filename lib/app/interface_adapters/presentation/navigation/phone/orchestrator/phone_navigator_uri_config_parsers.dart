@@ -2,11 +2,11 @@ import 'package:equatable/equatable.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:meta/meta.dart';
 
-import '../../../../../core/common/uuid/uuid_generator.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/phone/phone_app_routes.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/phone/phone_home_tab.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
-import '../shared/uri_configs.dart';
+import '../../../../../../core/common/uuid/uuid_generator.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_app_routes.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_home_tab.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
+import '../../shared/uri_configs.dart';
 
 class PhoneNavigatorUriConfigMatchResult<T extends UriConfig> extends Equatable {
   const PhoneNavigatorUriConfigMatchResult({

@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 
 enum ScreenLayout {
   phone,
-  // tablet,
   desktop,
 }
 

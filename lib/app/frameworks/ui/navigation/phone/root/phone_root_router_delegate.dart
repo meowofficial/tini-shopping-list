@@ -6,32 +6,31 @@ import 'package:flutter/material.dart';
 import '../../../../../../core/frameworks/ui/navigation/phone/phone_route_transition_delegate.dart';
 import '../../../../../../core/frameworks/ui/navigation/shared/navigator_observer.dart';
 import '../../../../../../core/frameworks/ui/navigation/shared/navigator_page.dart';
+import '../../../../../../core/frameworks/ui/utils/view_stream_builder.dart';
 import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_app_routes.dart';
-import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_navigator.dart';
-import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_route_transition.dart';
 import '../../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
-import '../../../../../interface_adapters/presentation/navigation/phone/phone_navigator_presenter.dart';
+import '../../../../../interface_adapters/presentation/navigation/phone/routers/interfaces/phone_root_router_presenter.dart';
 import '../../../../../interface_adapters/presentation/navigation/shared/uri_configs.dart';
 import '../../../phone_home_screen/screen.dart';
 
 class PhoneRootRouterDelegate extends RouterDelegate<UriConfig>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<UriConfig> {
   PhoneRootRouterDelegate({
-    required PhoneNavigatorPresenter navigatorPresenter,
-  }) : _navigatorPresenter = navigatorPresenter {
-    _navigatorStateStreamSubscription = _navigatorPresenter.stateStream.listen(
-      _onNavigatorStateChanged,
+    required this.presenter,
+  }) {
+    _navigatorUpdateStreamSubscription = presenter.navigatorUpdateStream.listen(
+      (_) => _onNavigatorStateChanged(),
     );
   }
 
   @override
   final navigatorKey = GlobalKey<NavigatorState>();
 
-  final PhoneNavigatorPresenter _navigatorPresenter;
+  final PhoneRootRouterPresenter presenter;
 
-  late final StreamSubscription<PhoneNavigatorState> _navigatorStateStreamSubscription;
+  late final StreamSubscription<void> _navigatorUpdateStreamSubscription;
 
-  void _onNavigatorStateChanged(PhoneNavigatorState navigatorState) {
+  void _onNavigatorStateChanged() {
     notifyListeners();
   }
 
@@ -65,59 +64,33 @@ class PhoneRootRouterDelegate extends RouterDelegate<UriConfig>
 
   @override
   void dispose() {
-    _navigatorStateStreamSubscription.cancel();
+    _navigatorUpdateStreamSubscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      initialData: _navigatorPresenter.state,
-      stream: _navigatorPresenter.stateStream,
-      builder: (context, snapshot) {
-        final state = snapshot.requireData;
-
-        final pages = state.rootStackState.routes
-            .where((route) {
-              switch (state.rootStackState.routeToTransition[route]) {
-                case null:
-                case PhoneAdditionRouteTransition():
-                  return true;
-
-                case PhoneRemovalRouteTransition():
-                  return false;
-              }
-            })
-            .map(_createNavigatorPage)
-            .toList();
+    return ViewStreamBuilder(
+      viewStreamable: presenter,
+      builder: (context, view) {
+        final pages = view.activeRoutes.map(_createNavigatorPage).toList();
 
         return Navigator(
           key: navigatorKey,
           pages: pages,
           onDidRemovePage: (page) {
             final route = (page as AppNavigatorPage).route;
-
-            _navigatorPresenter.onRootRoutePopped(
-              route: route,
-            );
+            presenter.onRoutePopped(route);
           },
           observers: [
             AppNavigatorObserver(
-              onPageAddedToNavigator: (route) {
-                _navigatorPresenter.onRouteAddedToRootNavigator(
-                  route: route,
-                );
-              },
-              onPageRemovedFromNavigator: (route) {
-                _navigatorPresenter.onRouteRemovedFromRootNavigator(
-                  route: route,
-                );
-              },
+              onPageAddedToNavigator: presenter.onRouteAddedToNavigator,
+              onPageRemovedFromNavigator: presenter.onRouteRemovedFromNavigator,
             ),
           ],
           transitionDelegate: PhoneRouteTransitionDelegate(
-            routes: state.rootStackState.routes,
-            routeToTransition: state.rootStackState.routeToTransition,
+            routes: view.routes,
+            routeToTransition: view.routeToTransition,
           ),
         );
       },
@@ -126,12 +99,12 @@ class PhoneRootRouterDelegate extends RouterDelegate<UriConfig>
 
   @override
   Future<void> setNewRoutePath(UriConfig uriConfig) {
-    _navigatorPresenter.onPlatformUriConfigChanged(uriConfig);
+    presenter.onPlatformUriConfigChanged(uriConfig);
     return SynchronousFuture(null);
   }
 
   @override
   UriConfig? get currentConfiguration {
-    return _navigatorPresenter.getCurrentUserConfig();
+    return presenter.getCurrentUserConfig();
   }
 }

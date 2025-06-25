@@ -6,33 +6,32 @@ import 'package:flutter/material.dart';
 import '../../../../../core/frameworks/ui/navigation/desktop/desktop_route_transition_delegate.dart';
 import '../../../../../core/frameworks/ui/navigation/shared/navigator_observer.dart';
 import '../../../../../core/frameworks/ui/navigation/shared/navigator_page.dart';
+import '../../../../../core/frameworks/ui/utils/view_stream_builder.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_app_routes.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_navigator.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_route_transition.dart';
 import '../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
 import '../../../../../features/shopping_list/frameworks/ui/desktop_shopping_list_item_addition_screen/screen.dart';
 import '../../../../../features/shopping_list/frameworks/ui/desktop_shopping_list_overview_screen/screen/screen.dart';
-import '../../../../interface_adapters/presentation/navigation/desktop/desktop_navigator_presenter.dart';
+import '../../../../interface_adapters/presentation/navigation/desktop/routers/interfaces/desktop_root_router_presenter.dart';
 import '../../../../interface_adapters/presentation/navigation/shared/uri_configs.dart';
 
-class DesktopRouterDelegate extends RouterDelegate<UriConfig>
+class DesktopRootRouterDelegate extends RouterDelegate<UriConfig>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<UriConfig> {
-  DesktopRouterDelegate({
-    required DesktopNavigatorPresenter navigatorPresenter,
-  }) : _navigatorPresenter = navigatorPresenter {
-    _navigatorStateStreamSubscription = _navigatorPresenter.stateStream.listen(
-      _onNavigatorStateChanged,
+  DesktopRootRouterDelegate({
+    required this.presenter,
+  }) {
+    _navigatorUpdateStreamSubscription = presenter.navigatorUpdateStream.listen(
+      (_) => _onNavigatorStateChanged(),
     );
   }
 
   @override
   final navigatorKey = GlobalKey<NavigatorState>();
 
-  final DesktopNavigatorPresenter _navigatorPresenter;
+  final DesktopRootRouterPresenter presenter;
 
-  late final StreamSubscription<DesktopNavigatorState> _navigatorStateStreamSubscription;
+  late final StreamSubscription<void> _navigatorUpdateStreamSubscription;
 
-  void _onNavigatorStateChanged(DesktopNavigatorState navigatorState) {
+  void _onNavigatorStateChanged() {
     notifyListeners();
   }
 
@@ -71,59 +70,33 @@ class DesktopRouterDelegate extends RouterDelegate<UriConfig>
 
   @override
   void dispose() {
-    _navigatorStateStreamSubscription.cancel();
+    _navigatorUpdateStreamSubscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      initialData: _navigatorPresenter.state,
-      stream: _navigatorPresenter.stateStream,
-      builder: (context, snapshot) {
-        final state = snapshot.requireData;
-
-        final pages = state.routes
-            .where((route) {
-              switch (state.routeToTransition[route]) {
-                case null:
-                case DesktopAdditionRouteTransition():
-                  return true;
-
-                case DesktopRemovalRouteTransition():
-                  return false;
-              }
-            })
-            .map(_createNavigatorPage)
-            .toList();
+    return ViewStreamBuilder(
+      viewStreamable: presenter,
+      builder: (context, view) {
+        final pages = view.activeRoutes.map(_createNavigatorPage).toList();
 
         return Navigator(
           key: navigatorKey,
           pages: pages,
           onDidRemovePage: (page) {
             final route = (page as AppNavigatorPage).route;
-
-            _navigatorPresenter.onRoutePopped(
-              route: route,
-            );
+            presenter.onRoutePopped(route);
           },
           observers: [
             AppNavigatorObserver(
-              onPageAddedToNavigator: (route) {
-                _navigatorPresenter.onRouteAddedToNavigator(
-                  route: route,
-                );
-              },
-              onPageRemovedFromNavigator: (route) {
-                _navigatorPresenter.onRouteRemovedFromNavigator(
-                  route: route,
-                );
-              },
+              onPageAddedToNavigator: presenter.onRouteAddedToNavigator,
+              onPageRemovedFromNavigator: presenter.onRouteRemovedFromNavigator,
             ),
           ],
           transitionDelegate: DesktopRouteTransitionDelegate(
-            routes: state.routes,
-            routeToTransition: state.routeToTransition,
+            routes: view.routes,
+            routeToTransition: view.routeToTransition,
           ),
         );
       },
@@ -132,12 +105,12 @@ class DesktopRouterDelegate extends RouterDelegate<UriConfig>
 
   @override
   Future<void> setNewRoutePath(UriConfig uriConfig) {
-    _navigatorPresenter.onPlatformUriConfigChanged(uriConfig);
+    presenter.onPlatformUriConfigChanged(uriConfig);
     return SynchronousFuture(null);
   }
 
   @override
   UriConfig? get currentConfiguration {
-    return _navigatorPresenter.getCurrentUserConfig();
+    return presenter.getCurrentUserConfig();
   }
 }

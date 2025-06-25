@@ -1,9 +1,9 @@
-import '../../../../../../core/common/extensions/iterable_extenstion.dart';
-import '../../../../../../core/common/uuid/uuid_generator.dart';
-import '../../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_app_routes.dart';
-import '../../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_navigator.dart';
-import '../../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_route_transition.dart';
-import '../../../../../../features/shopping_list/application/refs/flow_state_refs/shopping_list_item_addition_flow_state_ref.dart';
+import '../../../../../../../core/common/extensions/iterable_extenstion.dart';
+import '../../../../../../../core/common/uuid/uuid_generator.dart';
+import '../../../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_app_routes.dart';
+import '../../../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_navigator.dart';
+import '../../../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_route_transition.dart';
+import '../../../../../../../features/shopping_list/application/refs/flow_state_refs/shopping_list_item_addition_flow_state_ref.dart';
 
 sealed class ShoppingListItemAdditionFlowNavigatorDelegate {
   void handleStateChange({

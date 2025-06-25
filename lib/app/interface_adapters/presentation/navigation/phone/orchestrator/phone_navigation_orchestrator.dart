@@ -3,29 +3,27 @@ import 'dart:async';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../../core/common/disposable.dart';
-import '../../../../../core/common/stream/state_streamable.dart';
-import '../../../../../core/common/typedefs/value_with_previous.dart';
-import '../../../../../core/common/uuid/uuid_generator.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/phone/phone_app_routes.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/phone/phone_home_tab.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/phone/phone_navigator.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/phone/phone_route_transition.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
-import '../../../../../features/shopping_list/application/use_cases/read_shopping_list_item_addition_flow_state.dart';
-import '../../../../../features/shopping_list/application/use_cases/start_shopping_list_item_addition.dart';
-import '../../../../../features/shopping_list/application/use_cases/suspend_shopping_list_item_addition.dart';
-import '../../../../application/refs/flow_state_refs/app_initialization_flow_state_ref.dart';
-import '../../../../application/use_cases/read_app_initialization_flow_state.dart';
-import '../../../../application/use_cases/watch_app_initialization_flow_state.dart';
-import '../shared/uri_config_holder.dart';
-import '../shared/uri_configs.dart';
+import '../../../../../../core/common/disposable.dart';
+import '../../../../../../core/common/typedefs/value_with_previous.dart';
+import '../../../../../../core/common/uuid/uuid_generator.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_app_routes.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_home_tab.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_navigator.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/phone/phone_route_transition.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/shared/app_routes.dart';
+import '../../../../../../features/shopping_list/application/use_cases/read_shopping_list_item_addition_flow_state.dart';
+import '../../../../../../features/shopping_list/application/use_cases/start_shopping_list_item_addition.dart';
+import '../../../../../../features/shopping_list/application/use_cases/suspend_shopping_list_item_addition.dart';
+import '../../../../../application/refs/flow_state_refs/app_initialization_flow_state_ref.dart';
+import '../../../../../application/use_cases/read_app_initialization_flow_state.dart';
+import '../../../../../application/use_cases/watch_app_initialization_flow_state.dart';
+import '../../shared/uri_config_holder.dart';
+import '../../shared/uri_configs.dart';
 import 'phone_navigator_observers.dart';
 import 'phone_navigator_uri_config_parser_locator.dart';
 import 'phone_navigator_uri_config_parsers.dart';
 
-abstract interface class PhoneNavigatorPresenter
-    implements AsyncStateStreamable<PhoneNavigatorState>, Disposable {
+abstract interface class PhoneNavigationOrchestrator implements Disposable {
   void onRouteAddedToRootNavigator({
     required AppRoute route,
   });
@@ -58,9 +56,9 @@ abstract interface class PhoneNavigatorPresenter
   UriConfig? getCurrentUserConfig();
 }
 
-@LazySingleton(as: PhoneNavigatorPresenter)
-class PhoneNavigatorPresenterImpl implements PhoneNavigatorPresenter {
-  PhoneNavigatorPresenterImpl({
+@LazySingleton(as: PhoneNavigationOrchestrator)
+class PhoneNavigationOrchestratorImpl implements PhoneNavigationOrchestrator {
+  PhoneNavigationOrchestratorImpl({
     required PhoneNavigator phoneNavigator,
     required PhoneNavigatorUriConfigParserLocator phoneNavigatorUriConfigParserLocator,
     required UriConfigHolder uriConfigHolder,
@@ -116,12 +114,6 @@ class PhoneNavigatorPresenterImpl implements PhoneNavigatorPresenter {
 
   late final StreamSubscription<ValueWithPrevious<PhoneNavigatorState>>
   _navigatorStateStreamSubscription;
-
-  @override
-  PhoneNavigatorState get state => _navigator.state;
-
-  @override
-  Stream<PhoneNavigatorState> get stateStream => _navigator.stateStream;
 
   void _onNavigatorStateChanged(ValueWithPrevious<PhoneNavigatorState> valueWithPrevious) {
     final (currentState, previousState) = valueWithPrevious;

@@ -1,9 +1,9 @@
-import '../../../../../core/common/extensions/iterable_extenstion.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_app_routes.dart';
-import '../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_navigator.dart';
-import '../../../../../features/shopping_list/application/refs/flow_state_refs/shopping_list_item_addition_flow_state_ref.dart';
-import '../../../../../features/shopping_list/application/use_cases/read_shopping_list_item_addition_flow_state.dart';
-import '../../../../../features/shopping_list/application/use_cases/stop_shopping_list_item_addition.dart';
+import '../../../../../../core/common/extensions/iterable_extenstion.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_app_routes.dart';
+import '../../../../../../core/interface_adapters/presentation/navigation/desktop/desktop_navigator.dart';
+import '../../../../../../features/shopping_list/application/refs/flow_state_refs/shopping_list_item_addition_flow_state_ref.dart';
+import '../../../../../../features/shopping_list/application/use_cases/read_shopping_list_item_addition_flow_state.dart';
+import '../../../../../../features/shopping_list/application/use_cases/stop_shopping_list_item_addition.dart';
 
 sealed class DesktopNavigatorObserver {
   void handleStateChange({
