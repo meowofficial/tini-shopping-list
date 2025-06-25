@@ -28,9 +28,20 @@ class ShoppingListItemAdditionScreenOpeningNavigatorDelegate
     required ShoppingListItemAdditionFlowStateRef currentStateRef,
     required ShoppingListItemAdditionFlowStateRef previousStateRef,
   }) {
-    if (currentStateRef is! OngoingShoppingListItemAdditionFlowStateRef ||
-        previousStateRef is! IdleShoppingListItemAdditionFlowStateRef) {
-      return;
+    switch (currentStateRef) {
+      case IdleShoppingListItemAdditionFlowStateRef():
+      case SuspendedShoppingListItemAdditionFlowStateRef():
+        return;
+
+      case OngoingShoppingListItemAdditionFlowStateRef():
+        switch (previousStateRef) {
+          case IdleShoppingListItemAdditionFlowStateRef():
+          case SuspendedShoppingListItemAdditionFlowStateRef():
+            break;
+
+          case OngoingShoppingListItemAdditionFlowStateRef():
+            return;
+        }
     }
 
     final shoppingListItemAdditionRouteExists = _navigator.state.routes
