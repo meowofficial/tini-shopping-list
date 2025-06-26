@@ -13,6 +13,7 @@ import '../../../../../features/shopping_list/frameworks/ui/desktop_shopping_lis
 import '../../../../../features/shopping_list/frameworks/ui/desktop_shopping_list_overview_screen/screen/screen.dart';
 import '../../../../interface_adapters/presentation/navigation/desktop/routers/interfaces/desktop_root_router_presenter.dart';
 import '../../../../interface_adapters/presentation/navigation/shared/uri_configs.dart';
+import '../../splash_screen/screen.dart';
 
 class DesktopRootRouterDelegate extends RouterDelegate<UriConfig>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<UriConfig> {
@@ -42,9 +43,8 @@ class DesktopRootRouterDelegate extends RouterDelegate<UriConfig>
 
     switch (route) {
       case SplashRoute():
-        widget = Container(
+        widget = SplashScreen(
           key: Key(route.id),
-          color: Colors.white,
         );
 
       case DesktopShoppingListOverviewRoute():

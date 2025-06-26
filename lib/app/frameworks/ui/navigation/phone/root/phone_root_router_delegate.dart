@@ -12,6 +12,7 @@ import '../../../../../../core/interface_adapters/presentation/navigation/shared
 import '../../../../../interface_adapters/presentation/navigation/phone/routers/interfaces/phone_root_router_presenter.dart';
 import '../../../../../interface_adapters/presentation/navigation/shared/uri_configs.dart';
 import '../../../phone_home_screen/screen.dart';
+import '../../../splash_screen/screen.dart';
 
 class PhoneRootRouterDelegate extends RouterDelegate<UriConfig>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<UriConfig> {
@@ -41,9 +42,8 @@ class PhoneRootRouterDelegate extends RouterDelegate<UriConfig>
 
     switch (route) {
       case SplashRoute():
-        widget = Container(
+        widget = SplashScreen(
           key: Key(route.id),
-          color: Colors.white,
         );
 
       case PhoneHomeRoute():

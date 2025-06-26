@@ -1,52 +1,44 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../core/frameworks/ui/theme/app_styles.dart';
+import '../../../../../../core/frameworks/ui/theme/core_theme.dart';
+import '../../../../../../core/frameworks/ui/ui_kit/checkbox.dart';
 import '../../../../../../core/frameworks/ui/utils/view_stream_builder.dart';
 import '../../../../interface_adapters/presentation/phone_shopping_list_overview_screen/screen/interfaces/shopping_list_item_presenter.dart';
 import '../../../../interface_adapters/presentation/phone_shopping_list_overview_screen/screen/views/shopping_list_item_view.dart';
 
 class ShoppingListItemViewWidget extends StatelessWidget {
   const ShoppingListItemViewWidget({
-    required ShoppingListItemPresenter presenter,
+    required this.presenter,
     super.key,
-  }) : _presenter = presenter;
+  });
 
-  final ShoppingListItemPresenter _presenter;
+  final ShoppingListItemPresenter presenter;
 
   @override
   Widget build(BuildContext context) {
+    final brightness = CoreTheme.brightnessOf(context);
+
     return ViewStreamBuilder<ShoppingListItemView>(
-      viewStreamable: _presenter,
+      viewStreamable: presenter,
       builder: (context, view) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Container(
-            color: Colors.white,
+            color: switch (brightness) {
+              Brightness.dark => AppStyles.darkGrey3,
+              Brightness.light => AppStyles.white,
+            },
             constraints: const BoxConstraints(
               minHeight: 43.5,
             ),
             child: Row(
               children: [
-                Checkbox(
+                AppCheckbox(
                   value: view.checked,
                   onChanged: (_) {
-                    _presenter.onCheckboxPressed();
+                    presenter.onCheckboxPressed();
                   },
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  splashRadius: 0,
-                  activeColor: Colors.pink,
-                  checkColor: Colors.white,
-                  autofocus: false,
-                  side: const BorderSide(
-                    width: 1,
-                    color: Color(0xff8a8a8e),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    side: const BorderSide(
-                      width: 3,
-                      color: Color(0xff8a8a8e),
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                 ),
                 Expanded(
                   child: SizedBox(
@@ -59,18 +51,17 @@ class ShoppingListItemViewWidget extends StatelessWidget {
                         ),
                         child: Text(
                           view.title,
-                          style: const TextStyle(
+                          style: AppStyles.baseTextStyle.copyWith(
                             fontWeight: FontWeight.w400,
                             height: 1.2,
-                            color: Colors.black,
+                            color: switch (brightness) {
+                              Brightness.dark => AppStyles.white,
+                              Brightness.light => AppStyles.black,
+                            },
                             fontSize: 17.5,
                             letterSpacing: 0.2,
                           ),
                           textWidthBasis: TextWidthBasis.longestLine,
-                          textHeightBehavior: const TextHeightBehavior(
-                            applyHeightToFirstAscent: false,
-                            applyHeightToLastDescent: false,
-                          ),
                         ),
                       ),
                     ),

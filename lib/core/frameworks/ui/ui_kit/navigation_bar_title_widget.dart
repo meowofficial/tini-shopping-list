@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_styles.dart';
+import '../theme/core_theme.dart';
+
 class NavigationBarTitleWidget extends StatelessWidget {
   const NavigationBarTitleWidget({
     required this.title,
+    required this.fontSize,
     super.key,
   });
 
   final String title;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: const TextStyle(
+      style: AppStyles.baseTextStyle.copyWith(
         fontWeight: FontWeight.w600,
-        height: 1.0,
-        color: Colors.black,
-        fontSize: 20,
+        color: switch (CoreTheme.brightnessOf(context)) {
+          Brightness.dark => AppStyles.white,
+          Brightness.light => AppStyles.black,
+        },
+        fontSize: fontSize,
       ),
     );
   }

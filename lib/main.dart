@@ -14,6 +14,8 @@ import 'app/interface_adapters/presentation/navigation/phone/routers/interfaces/
 import 'app/interface_adapters/presentation/navigation/phone/routers/presenters/phone_root_router_presenter.dart';
 import 'app/interface_adapters/presentation/navigation/shared/uri_config_holder.dart';
 import 'app/interface_adapters/presentation/navigation/shared/uri_configs.dart';
+import 'core/frameworks/ui/theme/app_styles.dart';
+import 'core/frameworks/ui/theme/core_theme.dart';
 import 'core/frameworks/ui/utils/responsive.dart';
 import 'core/interface_adapters/presentation/navigation/desktop/desktop_navigator.dart';
 import 'core/interface_adapters/presentation/navigation/phone/phone_navigator.dart';
@@ -163,8 +165,8 @@ class _AppWidgetState extends State<AppWidget> {
       builder: (context, child) {
         const brightness = Brightness.light;
 
-        const primaryColor = Colors.pink;
-        const primaryContrastingColor = Colors.white;
+        const primaryColor = AppStyles.pink;
+        const primaryContrastingColor = AppStyles.white;
 
         return MediaQuery.withNoTextScaling(
           child: NotificationListener<OverscrollIndicatorNotification>(
@@ -174,7 +176,7 @@ class _AppWidgetState extends State<AppWidget> {
             },
             child: Theme(
               data: ThemeData(
-                fontFamily: 'Inter',
+                fontFamily: AppStyles.fontFamily,
                 brightness: brightness,
                 textSelectionTheme: const TextSelectionThemeData(
                   cursorColor: primaryColor,
@@ -196,8 +198,19 @@ class _AppWidgetState extends State<AppWidget> {
                   primaryContrastingColor: primaryContrastingColor,
                   brightness: brightness,
                 ),
-                child: Material(
-                  child: child!,
+                child: CoreTheme(
+                  primaryColor: primaryColor,
+                  primaryContrastingColor: primaryContrastingColor,
+                  brightness: brightness,
+                  child: DefaultTextHeightBehavior(
+                    textHeightBehavior: const TextHeightBehavior(
+                      applyHeightToFirstAscent: false,
+                      applyHeightToLastDescent: false,
+                    ),
+                    child: Material(
+                      child: child!,
+                    ),
+                  ),
                 ),
               ),
             ),

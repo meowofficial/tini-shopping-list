@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+
+import '../theme/core_theme.dart';
 
 class AppBackButton extends StatelessWidget {
   const AppBackButton({
@@ -12,7 +13,7 @@ class AppBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoNavigationBarBackButton(
-      color: Theme.of(context).primaryColor,
+      color: CoreTheme.of(context).primaryColor,
       onPressed: onPressed,
     );
   }
