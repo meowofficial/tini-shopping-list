@@ -5,7 +5,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 import 'app/frameworks/ui/navigation/desktop/desktop_root_router_delegate.dart';
 import 'app/frameworks/ui/navigation/phone/root/phone_root_router_delegate.dart';
 import 'app/frameworks/ui/navigation/shared/route_information_parser.dart';
-import 'app/interface_adapters/presentation/app/desktop_app_presenter.dart';
+import 'app/interface_adapters/presentation/app/app_presenter.dart';
 import 'app/interface_adapters/presentation/navigation/desktop/orchestrator/desktop_navigator_presenter.dart';
 import 'app/interface_adapters/presentation/navigation/desktop/routers/interfaces/desktop_root_router_presenter.dart';
 import 'app/interface_adapters/presentation/navigation/desktop/routers/presenters/desktop_root_router_presenter.dart';
@@ -170,7 +170,7 @@ class _AppWidgetState extends State<AppWidget> {
 
         return MediaQuery.withNoTextScaling(
           child: NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: (OverscrollIndicatorNotification overscroll) {
+            onNotification: (overscroll) {
               overscroll.disallowIndicator();
               return false;
             },

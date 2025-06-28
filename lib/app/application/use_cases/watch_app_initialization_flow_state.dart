@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
 
-import '../mappers/shopping_list_overview_flow_state_ref_mapper.dart';
+import '../mappers/app_initialization_flow_state_ref_mapper.dart';
 import '../refs/flow_state_refs/app_initialization_flow_state_ref.dart';
 import '../stores/app_initialization_flow_store.dart';
 

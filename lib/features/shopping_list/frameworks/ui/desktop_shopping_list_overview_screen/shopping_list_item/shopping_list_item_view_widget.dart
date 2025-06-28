@@ -52,7 +52,9 @@ class ShoppingListItemViewWidget extends StatelessWidget {
                         child: Text(
                           view.title,
                           style: AppStyles.baseTextStyle.copyWith(
-                            fontWeight: FontWeight.w400,
+                            fontVariations: const [
+                              FontVariation.weight(400),
+                            ],
                             height: 1.2,
                             color: switch (brightness) {
                               Brightness.dark => AppStyles.white,

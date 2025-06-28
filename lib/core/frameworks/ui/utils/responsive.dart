@@ -7,13 +7,13 @@ enum ScreenLayout {
 }
 
 class Responsive extends InheritedWidget {
-  final ResponsiveData data;
-
   const Responsive({
-    super.key,
     required this.data,
     required super.child,
+    super.key,
   });
+
+  final ResponsiveData data;
 
   static ResponsiveData of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<Responsive>()!.data;

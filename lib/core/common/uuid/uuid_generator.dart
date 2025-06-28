@@ -7,9 +7,9 @@ abstract interface class UuidGenerator {
 
 @LazySingleton(as: UuidGenerator)
 class UuidGeneratorImpl implements UuidGenerator {
-  const UuidGeneratorImpl() : _uuid = const Uuid();
+  const UuidGeneratorImpl();
 
-  final Uuid _uuid;
+  Uuid get _uuid => const Uuid();
 
   @override
   String generateUuid() {

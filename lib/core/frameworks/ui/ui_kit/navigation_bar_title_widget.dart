@@ -18,7 +18,9 @@ class NavigationBarTitleWidget extends StatelessWidget {
     return Text(
       title,
       style: AppStyles.baseTextStyle.copyWith(
-        fontWeight: FontWeight.w600,
+        fontVariations: const [
+          FontVariation.weight(500),
+        ],
         color: switch (CoreTheme.brightnessOf(context)) {
           Brightness.dark => AppStyles.white,
           Brightness.light => AppStyles.black,

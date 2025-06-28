@@ -12,7 +12,7 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
-import 'app/application/mappers/shopping_list_overview_flow_state_ref_mapper.dart'
+import 'app/application/mappers/app_initialization_flow_state_ref_mapper.dart'
     as _i879;
 import 'app/application/stores/app_initialization_flow_store.dart' as _i355;
 import 'app/application/use_cases/handle_app_launch.dart' as _i648;
