@@ -16,16 +16,21 @@ class PhoneShoppingListItemAdditionScreenViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentStatePresenter = presenter.currentStatePresenter;
+    return StreamBuilder(
+      stream: presenter.updateStream,
+      builder: (context, _) {
+        final currentStatePresenter = presenter.currentStatePresenter;
 
-    switch (currentStatePresenter) {
-      case ShoppingListItemAdditionScreenIdleStatePresenter():
-        return const ScreenIdleStateViewWidget();
+        switch (currentStatePresenter) {
+          case ShoppingListItemAdditionScreenIdleStatePresenter():
+            return const ScreenIdleStateViewWidget();
 
-      case ShoppingListItemAdditionScreenReadyStatePresenter():
-        return ScreenReadyStateViewWidget(
-          presenter: currentStatePresenter,
-        );
-    }
+          case ShoppingListItemAdditionScreenReadyStatePresenter():
+            return ScreenReadyStateViewWidget(
+              presenter: currentStatePresenter,
+            );
+        }
+      },
+    );
   }
 }
