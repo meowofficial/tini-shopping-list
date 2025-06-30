@@ -136,6 +136,15 @@ class ShoppingListItemAdditionScreenReadyStatePresenterImpl
   }
 
   @override
+  void onShoppingListItemTitleInputTextSubmitted() {
+    if (_completed) {
+      return;
+    }
+
+    _submitNewShoppingListItemDraft();
+  }
+
+  @override
   void onShoppingListItemTitleInputTextChanged(String value) {
     if (_completed) {
       return;

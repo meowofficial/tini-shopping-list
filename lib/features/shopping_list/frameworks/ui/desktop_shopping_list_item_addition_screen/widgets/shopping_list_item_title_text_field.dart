@@ -6,11 +6,13 @@ class ShoppingListItemTitleTextField extends StatefulWidget {
   const ShoppingListItemTitleTextField({
     required this.title,
     required this.onTextChanged,
+    required this.onTextSubmitted,
     super.key,
   });
 
   final String title;
   final ValueChanged<String> onTextChanged;
+  final VoidCallback onTextSubmitted;
 
   @override
   State<ShoppingListItemTitleTextField> createState() => _ShoppingListItemTitleTextFieldState();
@@ -55,6 +57,9 @@ class _ShoppingListItemTitleTextFieldState extends State<ShoppingListItemTitleTe
   Widget build(BuildContext context) {
     return CupertinoTextField(
       controller: _textEditingController,
+      onSubmitted: (_) {
+        widget.onTextSubmitted();
+      },
     );
   }
 }

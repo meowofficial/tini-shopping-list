@@ -8,5 +8,7 @@ abstract interface class ShoppingListItemAdditionScreenPresenter
 
   void onShoppingListItemTitleInputTextChanged(String value);
 
+  void onShoppingListItemTitleInputTextSubmitted();
+
   void onBackButtonPressed();
 }

@@ -53,6 +53,7 @@ class ScreenReadyStateViewInternalWidget extends StatelessWidget {
                 return ShoppingListItemTitleTextField(
                   title: shoppingListItemAdditionInputText,
                   onTextChanged: presenter.onShoppingListItemTitleInputTextChanged,
+                  onTextSubmitted: presenter.onShoppingListItemTitleInputTextSubmitted,
                 );
               },
             ),

@@ -15,5 +15,7 @@ abstract interface class ShoppingListItemAdditionScreenReadyStatePresenter
         ShoppingListItemAdditionScreenStatePresenter {
   void onShoppingListItemTitleInputTextChanged(String value);
 
+  void onShoppingListItemTitleInputTextSubmitted();
+
   void onShoppingListItemSubmissionButtonPressed();
 }

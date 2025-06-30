@@ -78,6 +78,7 @@ class DesktopShoppingListItemAdditionScreenViewInternalWidget extends StatelessW
                   return ShoppingListItemTitleTextField(
                     title: shoppingListItemAdditionInputText,
                     onTextChanged: presenter.onShoppingListItemTitleInputTextChanged,
+                    onTextSubmitted: presenter.onShoppingListItemTitleInputTextSubmitted,
                   );
                 },
               ),
