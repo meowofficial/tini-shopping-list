@@ -1,0 +1,32 @@
+name: student_app
+
+packages:
+  - packages/**
+
+environment:
+  sdk: ^3.8.1
+
+command:
+  bootstrap:
+    environment:
+      sdk: ^3.8.1
+
+scripts:
+  br:
+    run: melos exec -c 1 --depends-on="build_runner" -- dart run build_runner build --delete-conflicting-outputs
+    description: Run build_runner build in all packages
+    select-package:
+      depends-on: build_runner
+
+  brw:
+    run: melos exec -c 1 --depends-on="build_runner" -- dart run build_runner watch --delete-conflicting-outputs
+    description: Run build_runner watch in all packages that depend on build_runner
+    packageFilters:
+      dependsOn: build_runner
+
+
+sdkPath: .fvm/flutter_sdk
+
+ide:
+  intellij:
+    enabled: false

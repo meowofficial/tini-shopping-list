@@ -1,39 +1,8 @@
-name: shopping_list
+name: shopping_list_app
 publish_to: none
-
-version: 1.0.0+1
 
 environment:
   sdk: ^3.8.1
 
-dependencies:
-  flutter:
-    sdk: flutter
-  flutter_web_plugins:
-    sdk: flutter
-
-  cupertino_icons: 1.0.8
-  equatable: 2.0.7
-  fast_immutable_collections: 11.0.4
-  get_it: 8.0.3
-  injectable: 2.5.0
-  meta: any
-  uuid: 4.5.1
-
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
-  build_runner: 2.5.4
-  flutter_launcher_icons: 0.14.4
-  flutter_lints: 6.0.0
-  injectable_generator: 2.7.0
-
-flutter:
-  uses-material-design: true
-  fonts:
-    - family: Inter
-      fonts:
-        - asset: fonts/InterVariable.ttf
-        - asset: fonts/InterVariable-Italic.ttf
-          style: italic
+  melos: 6.3.3

@@ -1,0 +1,12 @@
+# melos_managed_dependency_overrides: common,dependency_versions,domain,linter,dev_dependency_versions
+dependency_overrides:
+  common:
+    path: ../common
+  dependency_versions:
+    path: ../dependency_versions
+  dev_dependency_versions:
+    path: ../dev_dependency_versions
+  domain:
+    path: ../domain
+  linter:
+    path: ../linter

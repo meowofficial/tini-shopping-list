@@ -1,0 +1,29 @@
+name: interface_adapters
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  equatable: any
+  fast_immutable_collections: any
+  fpdart: any
+  get_it: any
+  injectable: any
+  intl: any
+  json_annotation: any
+  meta: any
+
+  # local
+  application: any
+  common: any
+  dependency_versions: any
+
+dev_dependencies:
+  build_runner: any
+  injectable_generator: any
+
+  #local
+  dev_dependency_versions: any
+  linter: any

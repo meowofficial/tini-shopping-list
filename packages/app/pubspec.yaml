@@ -1,0 +1,42 @@
+name: app
+publish_to: none
+version: 3.11.2+108
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter: 
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+
+  get_it: any
+  injectable: any
+
+  # local
+  application: any
+  common: any
+  dependency_versions: any
+  domain: any
+  frameworks: any
+  interface_adapters: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  #local
+  dev_dependency_versions: any
+  linter: any
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: fonts/InterVariable.ttf
+        - asset: fonts/InterVariable-Italic.ttf
+          style: italic

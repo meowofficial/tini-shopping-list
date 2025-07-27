@@ -1,0 +1,18 @@
+# melos_managed_dependency_overrides: application,common,dependency_versions,domain,frameworks,interface_adapters,linter,dev_dependency_versions
+dependency_overrides:
+  application:
+    path: ../application
+  common:
+    path: ../common
+  dependency_versions:
+    path: ../dependency_versions
+  dev_dependency_versions:
+    path: ../dev_dependency_versions
+  domain:
+    path: ../domain
+  frameworks:
+    path: ../frameworks
+  interface_adapters:
+    path: ../interface_adapters
+  linter:
+    path: ../linter
