@@ -317,7 +317,7 @@ class DesktopNavigationOrchestratorImpl implements DesktopNavigationOrchestrator
   }
 
   @override
-  UriConfig? getCurrentUserConfig() {
+  UriConfig? getCurrentUriConfig() {
     final appInitializationFlowStateRef = _readAppInitializationFlowState();
 
     switch (appInitializationFlowStateRef) {

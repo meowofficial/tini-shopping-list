@@ -120,8 +120,8 @@ class PhoneRootRouterPresenterImpl extends BaseViewStreamablePresenter<PhoneRoot
   }
 
   @override
-  UriConfig? getCurrentUserConfig() {
-    return _navigationOrchestrator.getCurrentUserConfig();
+  UriConfig? getCurrentUriConfig() {
+    return _navigationOrchestrator.getCurrentUriConfig();
   }
 
   @override

@@ -34,5 +34,5 @@ abstract interface class PhoneNavigationOrchestrator implements Disposable {
 
   void onPlatformUriConfigChanged(UriConfig uriConfig);
 
-  UriConfig? getCurrentUserConfig();
+  UriConfig? getCurrentUriConfig();
 }

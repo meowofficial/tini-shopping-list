@@ -537,7 +537,7 @@ class PhoneNavigationOrchestratorImpl implements PhoneNavigationOrchestrator {
   }
 
   @override
-  UriConfig? getCurrentUserConfig() {
+  UriConfig? getCurrentUriConfig() {
     final appInitializationFlowState = _readAppInitializationFlowState();
 
     switch (appInitializationFlowState) {

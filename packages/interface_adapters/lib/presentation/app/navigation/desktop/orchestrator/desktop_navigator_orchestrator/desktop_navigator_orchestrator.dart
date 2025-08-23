@@ -21,5 +21,5 @@ abstract interface class DesktopNavigationOrchestrator
 
   void onPlatformUriConfigChanged(UriConfig uriConfig);
 
-  UriConfig? getCurrentUserConfig();
+  UriConfig? getCurrentUriConfig();
 }

@@ -111,6 +111,6 @@ class DesktopRootRouterDelegate extends RouterDelegate<UriConfig>
 
   @override
   UriConfig? get currentConfiguration {
-    return presenter.getCurrentUserConfig();
+    return presenter.getCurrentUriConfig();
   }
 }

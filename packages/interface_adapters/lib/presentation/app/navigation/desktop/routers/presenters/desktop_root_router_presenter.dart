@@ -17,5 +17,5 @@ abstract interface class DesktopRootRouterPresenter
 
   void onPlatformUriConfigChanged(UriConfig uriConfig);
 
-  UriConfig? getCurrentUserConfig();
+  UriConfig? getCurrentUriConfig();
 }
